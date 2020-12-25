@@ -3,10 +3,10 @@ const os = require('os');
 
 fs.readFile('./files/m80', 'utf8', (err, data) => {
     const dataObjects = getObjectsAndEventsFromFile(data);
-    // const events = createEventsFromObjects(objectsFromFile);
-    const blockedList    = dataObjects.filter(obj => obj.eventType == 'B');
-    const unblockedlist  = dataObjects.filter(obj => obj.eventType == 'U');
+
     const adjustmentList = dataObjects.filter(obj => obj.eventType == 'A');
+    // const blockedList    = dataObjects.filter(obj => obj.eventType == 'B');
+    // const unblockedlist  = dataObjects.filter(obj => obj.eventType == 'U');
 
     const stockAdjustmentHasBeenDoneEvents = createStockAdjustmentHasBeenDoneEvents(adjustmentList);
     // const productHasBeenBlockedEvents = createProductHasBeenBlockedEvents(blockedList);
