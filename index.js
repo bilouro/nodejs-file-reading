@@ -6,15 +6,15 @@ fs.readFile('./files/m80', 'utf8', (err, data) => {
     console.log(">>>> data objects <<<")
     console.log(dataObjects);
 
-    const adjustmentList = dataObjects.filter(obj => obj.eventType == 'A');
+    // const adjustmentList = dataObjects.filter(obj => obj.eventType == 'A');
     // const blockedList    = dataObjects.filter(obj => obj.eventType == 'B');
     // const unblockedlist  = dataObjects.filter(obj => obj.eventType == 'U');
 
-    const stockAdjustmentHasBeenDoneEvents = createStockAdjustmentHasBeenDoneEvents(adjustmentList);
+    // const stockAdjustmentHasBeenDoneEvents = createStockAdjustmentHasBeenDoneEvents(adjustmentList);
     // const productHasBeenBlockedEvents = createProductHasBeenBlockedEvents(blockedList);
     // const productHasBeenUnblockedEvents = createProductHasBeenUnblockedEvents(unblockedlist);
-    console.log(">>>> Adjustments events <<<")
-    console.log(stockAdjustmentHasBeenDoneEvents);
+    // console.log(">>>> Adjustments events <<<")
+    // console.log(stockAdjustmentHasBeenDoneEvents);
 
     //Perform Insert
 });
@@ -34,21 +34,10 @@ function getObjectsAndEventsFromFile(data) {
                 eventDate = processLine00(line);
                 break;
             case '01':
-                // blocking
+            case '02':
+            case '03':
                 //01123123B40
                 dataObjectsArray.push( processLine01(line, eventDate) );
-                dataLineReceivedCount++;
-                break;
-            case '02':
-                // unblocking
-                //02123123U                
-                dataObjectsArray.push( processLine02(line, eventDate));
-                dataLineReceivedCount++;
-                break;
-            case '03':
-                // adjustment
-                // 03123123A40objeto caiu quando estava sendo manipulado
-                dataObjectsArray.push( processLine03(line, eventDate) );
                 dataLineReceivedCount++;
                 break;
             case '99':
@@ -70,34 +59,36 @@ function processLine99(line, dataLineReceivedCount) {
     }
 }
 
-function processLine03(line, eventDate) {
-    return {
-            productNo: line.substring(2, 8),
-            eventDate: eventDate,
-            eventType: line.substring(8, 9),
-            eventCode: line.substring(9, 11),
-            eventDesc: line.substring(11, 53),
-            nunbu: 80,  //mock
-            codact: 13, //mock
-            codmvt:11, //mock
-        };
-    }
+function processLine01(line, eventDate)  {
+    const lineMapping = [
+        {name: 'productNo',  initial_position:  2, length:  6, type: 'integer' },
+        {name: 'eventType',  initial_position:  8, length:  1, type: 'string'  },
+        {name: 'eventCode',  initial_position:  9, length:  2, type: 'string'  },
+        {name: 'eventNumber',  fixedValue: '99', type: 'fixed'  },
+        {name: 'eventClass',  fixedValue: 'AAA', type: 'fixed'  },
+    ];
 
-function processLine02(line, eventDate) {
-    return {
-        productNo: line.substring(2, 8),
-        eventDate: eventDate,
-        eventType: line.substring(8, 9),
-    };
+    let dataObject = getDataFromFileLineByMapping(lineMapping, line);
+    dataObject.eventDate = eventDate;
+
+    return dataObject;
 }
 
-function processLine01(line, eventDate)  {
-    return {
-            productNo: line.substring(2, 8),
-            eventDate: eventDate,
-            eventType: line.substring(8, 9),
-            eventCode: line.substring(9, 11),
-        };
+function getDataFromFileLineByMapping(lineMapping, line) {
+    let dataObject = {};
+    lineMapping.map((attribute) => {
+
+        switch (attribute.type) {
+            case 'fixed':
+                dataObject[attribute.name] = attribute.fixedValue;
+                break;
+            default:
+                dataObject[attribute.name] =  line.substring(attribute.initial_position, attribute.initial_position + attribute.length)
+                break;
+        }
+           
+    });
+    return dataObject;
 }
 
 function processLine00(line) {
