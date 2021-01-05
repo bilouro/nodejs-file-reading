@@ -31,7 +31,7 @@ function getFileMapping() {
                 ]], 
                 ["99", [  
                     { name: 'codExc', initialPosition: 0, length: 2, type: 'string', required: true },
-                    { name: 'linesSentCount', initialPosition: 2, length: 7, type: 'integer', required: true },
+                    { name: 'totalLinesSent', initialPosition: 2, length: 7, type: 'integer', required: true },
                 ]], 
             ]            
         )
