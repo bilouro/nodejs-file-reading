@@ -26,7 +26,6 @@ function getObjectFromLine(lineMapping, line, lineNumber) {
         checkMappingIsValid(attribute);
 
         const value = line.substring(attribute.initialPosition, attribute.initialPosition + attribute.length);
-        checkRequiredIsValid(attribute, value, lineNumber);
         switch (attribute.type) {
             case 'integer':
                 dataObject[attribute.name] = parseInteger(value, attribute, lineNumber);
@@ -35,11 +34,12 @@ function getObjectFromLine(lineMapping, line, lineNumber) {
                 dataObject[attribute.name] = parseDate(value, attribute, lineNumber);
                 break;
             case 'string':
-                dataObject[attribute.name] =  value;
+                dataObject[attribute.name] = parseString(value, attribute, lineNumber);
                 break;
             default:
                 throw `Attribute type "${attribute.type}", declared in lineMapping is not valid or not implemented. line number ${lineNumber}.`;
         }
+        checkRequiredIsValid(attribute, dataObject[attribute.name], lineNumber);
     }
     return dataObject;
 }
@@ -52,6 +52,14 @@ function parseDate(value, attribute, lineNumber) {
     if (!dateMoment.isValid())
         throw `Value "${value}", is not a valid Date for the attribute ${attribute.name} (${attribute.dateFormat}). line number ${lineNumber}.`;
     return dateMoment.toDate();
+}
+
+function parseString(value, attribute, lineNumber) {
+    const convertedValue = value.trim();
+    if (convertedValue == '')
+        return null;
+    
+    return convertedValue;
 }
 
 function parseInteger(value, attribute, lineNumber) {
