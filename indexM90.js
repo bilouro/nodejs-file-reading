@@ -1,7 +1,7 @@
 const fs = require('fs');
 const os = require('os');
 const { exit } = require('process');
-const { getObjectsFromFile } = require("./positinalFleHelper");
+const { getObjectsFromFile } = require("./positionalFileHelper");
 
 fs.readFile('./files/358M9020122900148760.txt', 'utf8', (err, data) => {
     const dataObjects = getObjectsFromFile(data, getFileMapping());
