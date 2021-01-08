@@ -7,6 +7,8 @@ function getObjectsFromFile(data, fileMapping) {
     const lines = data.split(os.EOL);
     checkFileIsValid(lines);
 
+    if (lines[lines.length-1] === '') lines.pop(); // files seem to have an empty trailing line
+
     dataObjectsArray = lines.map((line, lineNumber) => {
         let discriminator = line.substr(fileMapping.discriminatorInitialPostion, fileMapping.discriminatorLenght);
         checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber);
@@ -55,11 +57,11 @@ function parseDate(value, attribute, lineNumber) {
 }
 
 function parseString(value, attribute, lineNumber) {
-    const convertedValue = value.trim();
-    if (convertedValue == '')
-        return null;
-    
-    return convertedValue;
+  const convertedValue = value.trim();
+  // const convertedValue = value;
+  // if (convertedValue == '') return null;
+
+  return convertedValue;
 }
 
 function parseInteger(value, attribute, lineNumber) {
@@ -92,7 +94,7 @@ function checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber) {
 }
 
 function checkRequiredIsValid(attribute, value, lineNumber) {
-    if (attribute.required && !value)
+    if (attribute.required && (value === null) )
         throw `${attribute.name} is required but has no value. line number ${lineNumber}.`;
 }
 
