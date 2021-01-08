@@ -1,12 +1,14 @@
 const os = require('os');
 const moment = require('moment');
+const { v4: uuidv4 } = require('uuid');
 
 function getObjectsFromFile(data, fileMapping) {
     let dataObjectsArray = [];
+    let parentMap = new Map();
 
     const lines = data.split(os.EOL);
     checkFileIsValid(lines);
-
+    
     for(lineNumber=0;lineNumber<lines.length;lineNumber++){
         let line = lines[lineNumber];
         if (!isLineHasData(line)) continue; //ignoring empty lines
@@ -15,14 +17,20 @@ function getObjectsFromFile(data, fileMapping) {
         checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber);
 
         let lineMapping = fileMapping.lines.get(discriminator);
-        if (isLineMappingIsValid(lineMapping, discriminator, lineNumber))
-        dataObjectsArray.push(getObjectFromLine(lineMapping, line, lineNumber));
+        if (!isLineMappingValid(lineMapping, discriminator, lineNumber)) continue;
+        
+        let object = getObjectFromLine(lineMapping, line, lineNumber, parentMap);
+        object.uuid = uuidv4();
+
+        parentMap.set(discriminator, object);
+
+        dataObjectsArray.push(object);
     }
     return dataObjectsArray;
 }
 
 
-function getObjectFromLine(lineMapping, line, lineNumber) {
+function getObjectFromLine(lineMapping, line, lineNumber, parentMap) {
     const dataObject = {};
     for (i=0;i<lineMapping.length;i++){
 
@@ -39,6 +47,9 @@ function getObjectFromLine(lineMapping, line, lineNumber) {
                 break;
             case 'string':
                 dataObject[attribute.name] = parseString(value, attribute, lineNumber);
+                break;
+            case 'parent':
+                dataObject[attribute.name] = parentMap.get(attribute.parentDiscriminator)[attribute.parentAttribute];
                 break;
             default:
                 throw `Attribute type "${attribute.type}", declared in lineMapping is not valid or not implemented. line number ${lineNumber}.`;
@@ -85,7 +96,7 @@ function checkFileIsValid(lines) {
         throw `file has no lines`;
 }
 
-function isLineMappingIsValid(lineMapping, discriminator, lineNumber) {
+function isLineMappingValid(lineMapping, discriminator, lineNumber) {
     if (!lineMapping || lineMapping.length == 0) {
         console.log(`missing lineMapping for discriminator "${discriminator}". Line #${lineNumber} IGNORED`);
         return false;
@@ -108,9 +119,9 @@ function checkMappingIsValid(attribute) {
         throw 'missing mapping attribute';
     if (!attribute.name)
         throw 'missing mapping attribute: name';
-    if (!attribute.initialPosition && attribute.initialPosition != 0) //ZERO is valid
+    if (!attribute.initialPosition && attribute.initialPosition != 0 && attribute.type != 'parent') //ZERO is valid
         throw 'missing mapping attribute: initialPosition';
-    if (!attribute.length)
+    if (!attribute.length && attribute.type != 'parent')
         throw 'missing mapping attribute: length';
 }
 
