@@ -52,6 +52,9 @@ function parseDate(value, attribute, lineNumber) {
     if (!attribute.dateFormat)
         throw `The attribute ${attribute.name} has no dateFormat declared in lineMapping`;
 
+    if (attribute.nullIf && attribute.nullIf.includes(value))
+      return null;
+
     const dateMoment = moment(value, attribute.dateFormat);
     if (!dateMoment.isValid())
         throw `Value "${value}", is not a valid Date for the attribute ${attribute.name} (${attribute.dateFormat}). line number ${lineNumber}.`;
