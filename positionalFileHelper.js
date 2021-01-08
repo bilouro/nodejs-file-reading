@@ -7,23 +7,25 @@ function getObjectsFromFile(data, fileMapping) {
     const lines = data.split(os.EOL);
     checkFileIsValid(lines);
 
-    if (lines[lines.length-1] === '') lines.pop(); // files seem to have an empty trailing line
-
-    dataObjectsArray = lines.map((line, lineNumber) => {
-        let discriminator = line.substr(fileMapping.discriminatorInitialPostion, fileMapping.discriminatorLenght);
+    for(lineNumber=0;lineNumber<lines.length;lineNumber++){
+        let line = lines[lineNumber];
+        if (!isLineHasData(line)) continue; //ignoring empty lines
+        
+        let discriminator = line.substr(fileMapping.discriminatorInitialPostion, fileMapping.discriminatorInitialPostion+fileMapping.discriminatorLenght);
         checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber);
 
         let lineMapping = fileMapping.lines.get(discriminator);
-        if (checkLineMappingIsValid(lineMapping, discriminator, lineNumber))
-            return getObjectFromLine(lineMapping, line, lineNumber);
-        
-    });
+        if (isLineMappingIsValid(lineMapping, discriminator, lineNumber))
+        dataObjectsArray.push(getObjectFromLine(lineMapping, line, lineNumber));
+    }
     return dataObjectsArray;
 }
+
 
 function getObjectFromLine(lineMapping, line, lineNumber) {
     const dataObject = {};
     for (i=0;i<lineMapping.length;i++){
+
         const attribute = lineMapping[i];
         checkMappingIsValid(attribute);
 
@@ -58,8 +60,7 @@ function parseDate(value, attribute, lineNumber) {
 
 function parseString(value, attribute, lineNumber) {
   const convertedValue = value.trim();
-  // const convertedValue = value;
-  // if (convertedValue == '') return null;
+  if (convertedValue == '') return null;
 
   return convertedValue;
 }
@@ -75,12 +76,16 @@ function parseInteger(value, attribute, lineNumber) {
     return convertedValue;
 }
 
+function isLineHasData(line) {
+    return line.trim() != '';
+}
+
 function checkFileIsValid(lines) {
     if (!lines || (lines.length == 1 && lines[0] == ''))
         throw `file has no lines`;
 }
 
-function checkLineMappingIsValid(lineMapping, discriminator, lineNumber) {
+function isLineMappingIsValid(lineMapping, discriminator, lineNumber) {
     if (!lineMapping || lineMapping.length == 0) {
         console.log(`missing lineMapping for discriminator "${discriminator}". Line #${lineNumber} IGNORED`);
         return false;
@@ -94,7 +99,7 @@ function checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber) {
 }
 
 function checkRequiredIsValid(attribute, value, lineNumber) {
-    if (attribute.required && (value === null) )
+    if (attribute.required && (!value && value != 0) )
         throw `${attribute.name} is required but has no value. line number ${lineNumber}.`;
 }
 
