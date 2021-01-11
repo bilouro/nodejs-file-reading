@@ -91,6 +91,7 @@ function parseInteger(value, attribute, lineNumber) {
 }
 
 function isLineHasData(line) {
+    if (!line) return false;
     return line.trim() != '';
 }
 
@@ -128,4 +129,10 @@ function checkMappingIsValid(attribute) {
         throw 'missing mapping attribute: length';
 }
 
-exports.getObjectsFromFile = getObjectsFromFile;
+module.exports = {
+    getObjectsFromFile: getObjectsFromFile,
+    isLineHasData: isLineHasData,
+    parseString: parseString,
+    parseInteger: parseInteger,
+    parseDate: parseDate,
+};
