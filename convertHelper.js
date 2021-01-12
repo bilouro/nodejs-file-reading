@@ -2,6 +2,7 @@ function convert(dataObjects, bindingMap) {
     let returnObjects = [];
     let header = (bindingMap.header != null) ? dataObjects[bindingMap.header] : null;
     let footer = (bindingMap.footer != null) ? dataObjects[dataObjects.length + bindingMap.footer] : null;
+    let skipObjectIfMap = (bindingMap.skipObjectIf) ? bindingMap.skipObjectIf : null;
 
     //start 1(one) object after the header object
     let i = (bindingMap.header != null) ? bindingMap.header + 1 : 0;
@@ -10,6 +11,8 @@ function convert(dataObjects, bindingMap) {
     for (; i < dataObjectsLenght; i++) {
         let sourceObject = dataObjects[i];
         let destinationObject = {};
+
+        if (skipObjectIfMap && skipCurrentLine(skipObjectIfMap, sourceObject)) continue;
 
         for (j = 0; j < bindingMap.bindings.length; j++) {
             let bind = bindingMap.bindings[j];
@@ -40,6 +43,14 @@ function convert(dataObjects, bindingMap) {
         returnObjects.push(destinationObject);
     }
     return returnObjects;
+}
+
+function skipCurrentLine(skipObjectIfMap, object) {
+    for (let [attribute, skipValuesList] of skipObjectIfMap) {
+        if (!object[attribute]) throw `Attribute "${attribute}" defined in mapping.skipObjectIf does not exist in source object`;
+        if (skipValuesList.includes(object[attribute])) return true;
+    }
+    return false;
 }
 
 function setNestedAttribute(object, path, value) {

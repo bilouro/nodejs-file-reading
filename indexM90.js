@@ -12,6 +12,7 @@ fs.readFile('./files/358M9020122900148760.txt', 'utf8', (err, data) => {
 });
 
 const mapping90 = [
+  { name: 'regexc', initialPosition: 0, length: 5, type: 'string', required: true },
   { name: 'codexc', initialPosition: 0, length: 2, type: 'integer', required: true },
   { name: 'sepexc', initialPosition: 2, length: 1, type: 'string', required: true },
   { name: 'scoexc', initialPosition: 3, length: 2, type: 'integer', required: true },
@@ -62,6 +63,7 @@ function getFileMapping() {
       [
         '00.00',
         [
+          { name: 'regexc', initialPosition: 0, length: 5, type: 'string', required: true },
           { name: 'codexc', initialPosition: 0, length: 2, type: 'integer', required: true },
           { name: 'sepexc', initialPosition: 2, length: 1, type: 'string', required: true },
           { name: 'scoexc', initialPosition: 3, length: 2, type: 'integer', required: true },
@@ -103,6 +105,7 @@ function getFileMapping() {
       [
         '99.00',
         [
+          { name: 'regexc', initialPosition: 0, length: 5, type: 'string', required: true },
           { name: 'codexc', initialPosition: 0, length: 2, type: 'integer', required: true },
           { name: 'sepexc', initialPosition: 2, length: 1, type: 'string', required: true },
           { name: 'scoexc', initialPosition: 3, length: 2, type: 'integer', required: true },
@@ -128,6 +131,9 @@ function getBindingMap() {
   return  {
       header: 0,   //null for no header
       footer: -1,  //null for no footer
+      skipObjectIf: new Map([
+        ['regexc', [ '90.60',],],
+      ]),
       bindings: [
               { destination: 'snapshotDate', source: 'datexc',                            type: 'function', value: bind__date_epoch },
               { destination: 'productReferenceAdeo',                                      type: 'fixed', value: null },
