@@ -9,7 +9,7 @@ function getObjectsFromFile(data, fileMapping) {
     const lines = data.split(os.EOL);
     checkFileIsValid(lines);
     
-    for(lineNumber=0;lineNumber<lines.length;lineNumber++){
+    for(let lineNumber=0;lineNumber<lines.length;lineNumber++){
         let line = lines[lineNumber];
         if (!isLineHasData(line)) continue; //ignoring empty lines
         
