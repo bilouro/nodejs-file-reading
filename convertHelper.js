@@ -16,19 +16,22 @@ function convert(dataObjects, bindingMap) {
 
             switch (bind.type) {
                 case 'copy':
-                    destinationObject[bind.destination] = sourceObject[bind.source];
+                    setNestedAttribute(destinationObject, bind.destination, sourceObject[bind.source]);
                     break;
                 case 'header':
-                    destinationObject[bind.destination] = header[bind.source];
+                    setNestedAttribute(destinationObject, bind.destination, header[bind.source]);
                     break;
                 case 'footer':
-                    destinationObject[bind.destination] = footer[bind.source];
+                    setNestedAttribute(destinationObject, bind.destination, footer[bind.source]);
                     break;
                 case 'fixed':
-                    destinationObject[bind.destination] = bind.value;
+                    setNestedAttribute(destinationObject, bind.destination, bind.value);
                     break;
                 case 'function':
-                    destinationObject[bind.destination] = bind.value(sourceObject, header, footer, dataObjects.slice(i+1, dataObjectsLenght));
+                    setNestedAttribute(destinationObject, 
+                        bind.destination, 
+                        bind.value(sourceObject, header, footer, dataObjects.slice(i+1, dataObjectsLenght))
+                        );
                     break;
                 default:
                     throw `Bind type "${bind.type}", declared in bindingMap is not valid or not implemented. Bind destination ${bind.destination}.`;
@@ -38,4 +41,25 @@ function convert(dataObjects, bindingMap) {
     }
     return returnObjects;
 }
+
+function setNestedAttribute(object, path, value) {
+    let tempObject;
+    if (!path) throw 'Argument path not informed';
+    if (!object) throw 'Argument object not informed';
+
+    splitedPath = path.split('.');
+    if (splitedPath.length == 1) {
+        object[path] = value;
+    } else { // > 1
+        tempObject = object;
+        for (let index = 0; index < splitedPath.length - 1; index++) {
+            const nestedObject = splitedPath[index];
+            if (!tempObject[nestedObject]) tempObject[nestedObject] = {};
+            tempObject = tempObject[nestedObject];
+        }
+        let attribute = splitedPath[splitedPath.length - 1];
+        tempObject[attribute] = value;
+    }
+}
+
 exports.convert = convert;
