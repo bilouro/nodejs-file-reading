@@ -2,7 +2,7 @@ const fs = require('fs');
 const os = require('os');
 const { exit } = require('process');
 const { convert } = require("./convertHelper");
-const { getObjectsFromFile } = require("./positinalFleHelper");
+const { getObjectsFromFile } = require("./positionalFileHelper");
 
 fs.readFile('./files/m80', 'utf8', (err, data) => {
     const mock = getMock();

@@ -18,6 +18,12 @@ function convert(dataObjects, bindingMap) {
                 case 'copy':
                     destinationObject[bind.destination] = sourceObject[bind.source];
                     break;
+                case 'header':
+                    destinationObject[bind.destination] = header[bind.source];
+                    break;
+                case 'footer':
+                    destinationObject[bind.destination] = footer[bind.source];
+                    break;
                 case 'fixed':
                     destinationObject[bind.destination] = bind.value;
                     break;

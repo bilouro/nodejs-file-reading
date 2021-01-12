@@ -2,10 +2,13 @@ const fs = require('fs');
 const os = require('os');
 const { exit } = require('process');
 const { getObjectsFromFile } = require("./positionalFileHelper");
+const { convert } = require("./convertHelper");
 
 fs.readFile('./files/358M9020122900148760.txt', 'utf8', (err, data) => {
     const dataObjects = getObjectsFromFile(data, getFileMapping());
-    console.log(dataObjects);
+    // console.log(dataObjects);
+    const eventObjects = convert(dataObjects, getBindingMap());
+    console.log(eventObjects);
 });
 
 /**
@@ -55,7 +58,7 @@ function getFileMapping() {
           { name: 'trtexc', initialPosition: 5, length: 1, type: 'string', required: false },
           { name: 'codact', initialPosition: 6, length: 3, type: 'string', required: false },
           { name: 'codcli', initialPosition: 9, length: 14, type: 'string', required: false },
-          { name: 'codpro', initialPosition: 23, length: 17, type: 'string', required: false },
+          { name: 'codpro', initialPosition: 23, length: 17, type: 'integer', required: false },
           { name: 'valpro', initialPosition: 40, length: 2, type: 'integer', required: false },
           { name: 'motimm', initialPosition: 42, length: 3, type: 'string', required: false },
           { name: 'datimm1', initialPosition: 45, length: 8, type: 'date', required: false, dateFormat: 'YYYYMMDD', nullIf: ['00000000'] },
@@ -110,3 +113,47 @@ function getFileMapping() {
     ]),
   };
 }
+
+function getBindingMap() {
+  return  {
+      header: 0,   //null for no header
+      footer: -1,  //null for no footer
+      bindings: [
+              { destination: 'snapshotDate', source: 'datexc',           type: 'function', value: bind__date_epoch },
+              { destination: 'productReferenceAdeo',                     type: 'fixed', value: null },
+              { destination: 'productReferenceBU', source: 'codpro',     type: 'copy' },
+              { destination: 'physicalStockQuantity',                    type: 'function', value: bind__physicalStockQuantity },
+              { destination: 'blockedStockQuantity',                     type: 'function', value: bind__blockedStockQuantity },
+              { destination: 'businessUnitIdentifier', source: 'edisit', type: 'header' },
+              { destination: 'identifier', source: 'codact',             type: 'copy' },
+              { destination: 'scoexc', source: 'scoexc',             type: 'copy' },
+              { destination: 'motimm', source: 'motimm',             type: 'copy' },
+              // { destination: 'cod_typett', source: 'codtypett',       type: 'fixed'   , value: '2' },
+              // { destination: 'num_cen', source: 'numcen',             type: 'function', value: bind__num_bu},
+              // { destination: 'cod_etafinpal', source: 'codetafinpal', type: 'function', value: bind__cod_etafinpal},
+          ]
+      }            
+};
+
+function bind__date_epoch(currentObject, header, footer, forthcomingObjectList) {
+  return header.datexc.getTime();
+};
+
+function bind__physicalStockQuantity(currentObject, header, footer, forthcomingObjectList){
+  let sum = 0; 
+  for (i = 0; i < forthcomingObjectList.length; i++) {
+    if (forthcomingObjectList[i].codexc === 90 && forthcomingObjectList[i].scoexc === 60) {
+      if (forthcomingObjectList[i].motimm === null) sum += forthcomingObjectList[i].nbruvc01;
+    } else break;
+  }
+  return sum;
+};
+function bind__blockedStockQuantity(currentObject, header, footer, forthcomingObjectList){
+  let sum = 0; 
+  for (i = 0; i < forthcomingObjectList.length; i++) {
+    if (forthcomingObjectList[i].codexc === 90 && forthcomingObjectList[i].scoexc === 60) {
+      if (forthcomingObjectList[i].motimm !== null) sum += forthcomingObjectList[i].nbruvc01;
+    } else break;
+  }
+  return sum;
+};
