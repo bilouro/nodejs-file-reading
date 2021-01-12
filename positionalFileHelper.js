@@ -135,4 +135,5 @@ module.exports = {
     parseString: parseString,
     parseInteger: parseInteger,
     parseDate: parseDate,
+    getObjectsFromFile: getObjectsFromFile,
 };
