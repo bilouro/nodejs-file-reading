@@ -145,8 +145,6 @@ function getBindingMap() {
               { destination: 'sourcingLocation.type',                                     type: 'fixed', value: 'warehouse' },
               { destination: 'physicalStocks',                                            type:'function', value: bind__physicalStocksArray },
               { destination: 'blockedStocks',                                             type:'function', value: bind__blockedStocksArray },
-              { destination: 'scoexc', source: 'scoexc',                                  type: 'copy' },
-              { destination: 'motimm', source: 'motimm',                                  type: 'copy' },
           ]
       }            
 };
@@ -175,6 +173,21 @@ function bind__blockedStockQuantity(currentObject, header, footer, forthcomingOb
   return sum;
 };
 
+function getPhysicalStocksBindingMap() {
+  return {
+    bindings: [
+      { destination: 'quantity', source: 'nbruvc01', type: 'copy' },
+      { destination: 'expirationDate',               type: 'function', value: bind__physicalStock_expirationDate  },
+      { destination: 'qualification',                type: 'fixed', value: null },
+      { destination: 'status',                       type: 'fixed', value: null },
+    ]
+  }
+};
+
+function bind__physicalStock_expirationDate(currentObject) {
+  return currentObject.datfvi ? currentObject.datfvi.getTime() : null
+};
+
 function bind__physicalStocksArray(currentObject, header, footer, forthcomingObjectList) {
   const physicalStocksArray = [];
   for (let i = 0; i < forthcomingObjectList.length; i++) {
@@ -183,15 +196,39 @@ function bind__physicalStocksArray(currentObject, header, footer, forthcomingObj
     } else break;
   }
 
-  return physicalStocksArray.map((physicalStockObj) => (
-    { 
-      quantity: physicalStockObj.nbruvc01, 
-      expirationDate: physicalStockObj.datfvi ? physicalStockObj.datfvi.getTime() : null,
-      qualification: null,
-      status: null,
-    }
-  ));
+  return new Converter().convert(physicalStocksArray, getPhysicalStocksBindingMap())
 };
+
+function getBlockedStocksBindingMap() {
+  return {
+    bindings: [
+      { destination: 'quantity', source: 'nbruvc01', type: 'copy' },
+      { destination: 'type',                         type: 'function', value: bind__blockedStock_type  },
+      { destination: 'reason',                       type: 'function', value: bind__blockedStock_reason },
+      { destination: 'date',                         type: 'function', value: bind__blockedStock_date_epoch },
+    ]
+  }
+};
+
+function bind__blockedStock_type(currentObject) {
+  if (currentObject.motimm === 'LIT' || currentObject.motimm === 'E') {
+    return 'dispute';
+  } else if (currentObject.motimm === 'CAS') {
+    return 'broken';
+  }
+  return 'blocked';
+};
+
+function bind__blockedStock_reason(currentObject) {
+  if ((currentObject.motimm !== 'LIT' || currentObject.motimm !== 'E') && currentObject.motimm !== 'CAS') {
+    return currentObject.motimm;
+  }
+  return null;
+};
+
+function bind__blockedStock_date_epoch(currentObject) {
+  return currentObject.datimm1.getTime();
+}
 
 function bind__blockedStocksArray(currentObject, header, footer, forthcomingObjectList) {
   const blockedStocksArray = [];
@@ -199,15 +236,7 @@ function bind__blockedStocksArray(currentObject, header, footer, forthcomingObje
     if (forthcomingObjectList[i].codexc === 90 && forthcomingObjectList[i].scoexc === 60) {
       if (forthcomingObjectList[i].motimm !== null) blockedStocksArray.push(forthcomingObjectList[i]);
     } else break;
-
   }
 
-  return blockedStocksArray.map((blockedStockObj) => (
-    { blockedStock: {
-        quantity: blockedStockObj.nbruvc01, 
-        type: (blockedStockObj.motimm === 'LIT' || blockedStockObj.motimm === 'E') ? 'dispute' : blockedStockObj.motimm === 'CAS' ? 'broken' : 'blocked',
-        reason: (blockedStockObj.motimm !== 'LIT' || blockedStockObj.motimm !== 'E') && blockedStockObj.motimm !== 'CAS' ? blockedStockObj.motimm : null,
-        date: blockedStockObj.datimm1.getTime(),
-        } }
-    ));
+  return new Converter().convert(blockedStocksArray, getBlockedStocksBindingMap())
 };
