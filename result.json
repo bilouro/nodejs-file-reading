@@ -1,0 +1,319 @@
+[
+  {
+    "identifier": 11382,
+    "supplyCircuitType": "stock",
+    "validationDate": 1609859760000,
+    "startDate": 1609859760000,
+    "closedDate": 1609859760000,
+    "deliveryNoteNumber": null,
+    "shipmentIdentifier": null,
+    "expectedPackages": [
+      {
+        "quantity": null,
+        "type": null
+      }
+    ],
+    "packages": [
+      {
+        "quantity": 5.25,
+        "type": "parcel"
+      },
+      {
+        "quantity": 21,
+        "type": "parcel"
+      },
+      {
+        "quantity": 16.5,
+        "type": "parcel"
+      },
+      {
+        "quantity": 1.5,
+        "type": "parcel"
+      },
+      {
+        "quantity": 2.5,
+        "type": "parcel"
+      },
+      {
+        "quantity": 12,
+        "type": "parcel"
+      },
+      {
+        "quantity": 13,
+        "type": "parcel"
+      },
+      {
+        "quantity": 8,
+        "type": "parcel"
+      },
+      {
+        "quantity": 2.25,
+        "type": "parcel"
+      },
+      {
+        "quantity": 3.5,
+        "type": "parcel"
+      },
+      {
+        "quantity": 0.7,
+        "type": "parcel"
+      },
+      {
+        "quantity": 3.5,
+        "type": "parcel"
+      },
+      {
+        "quantity": 3.25,
+        "type": "parcel"
+      },
+      {
+        "quantity": 1.6666666666666667,
+        "type": "parcel"
+      },
+      {
+        "quantity": 1,
+        "type": "parcel"
+      },
+      {
+        "quantity": 5.5,
+        "type": "parcel"
+      },
+      {
+        "quantity": 3.25,
+        "type": "parcel"
+      },
+      {
+        "quantity": 7.25,
+        "type": "parcel"
+      }
+    ],
+    "deliveryLocation": {
+      "businessUnitIdentifier": 3,
+      "identifier": 358,
+      "type": "warehouse"
+    },
+    "shippingLocation": {
+      "businessUnitIdentifier": 3,
+      "identifier": 204922,
+      "type": "supplier"
+    },
+    "receptionLines": [
+      {
+        "identifier": 11,
+        "productReferenceBU": "79783480",
+        "productReferenceAdeo": null,
+        "quantity": 504,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 6,
+        "productReferenceBU": "81871798",
+        "productReferenceAdeo": null,
+        "quantity": 1008,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 10,
+        "productReferenceBU": "81871800",
+        "productReferenceAdeo": null,
+        "quantity": 792,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 1,
+        "productReferenceBU": "81871801",
+        "productReferenceAdeo": null,
+        "quantity": 144,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 13,
+        "productReferenceBU": "81871807",
+        "productReferenceAdeo": null,
+        "quantity": 120,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 2,
+        "productReferenceBU": "81871808",
+        "productReferenceAdeo": null,
+        "quantity": 288,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 8,
+        "productReferenceBU": "81871809",
+        "productReferenceAdeo": null,
+        "quantity": 312,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 16,
+        "productReferenceBU": "81871810",
+        "productReferenceAdeo": null,
+        "quantity": 192,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 9,
+        "productReferenceBU": "81871814",
+        "productReferenceAdeo": null,
+        "quantity": 216,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 5,
+        "productReferenceBU": "81874042",
+        "productReferenceAdeo": null,
+        "quantity": 168,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 14,
+        "productReferenceBU": "82206361",
+        "productReferenceAdeo": null,
+        "quantity": 140,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 7,
+        "productReferenceBU": "82260884",
+        "productReferenceAdeo": null,
+        "quantity": 504,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 15,
+        "productReferenceBU": "82260886",
+        "productReferenceAdeo": null,
+        "quantity": 312,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 17,
+        "productReferenceBU": "82260892",
+        "productReferenceAdeo": null,
+        "quantity": 120,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 4,
+        "productReferenceBU": "82260894",
+        "productReferenceAdeo": null,
+        "quantity": 96,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 12,
+        "productReferenceBU": "82260896",
+        "productReferenceAdeo": null,
+        "quantity": 396,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 3,
+        "productReferenceBU": "82260932",
+        "productReferenceAdeo": null,
+        "quantity": 312,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      },
+      {
+        "identifier": 18,
+        "productReferenceBU": "82260934",
+        "productReferenceAdeo": null,
+        "quantity": 348,
+        "deliveryNoteQuantity": null,
+        "differenceQuantity": 0,
+        "physicalStockExpirationDate": null,
+        "transferID": null,
+        "purchaseOrderID": "269670",
+        "customerOrderNumber": null
+      }
+    ]
+  }
+]
