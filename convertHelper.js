@@ -1,19 +1,58 @@
+const { isDate } = require("moment");
+
 class Converter {
 
-    convert(dataObjects, bindingMap) {
+    getProperBindMap(bindMapArray, object) {
+        if (bindMapArray.length == 1){
+            const bindMap = bindMapArray[0];
+
+        } else { // (bindMapArray.length > 1) {
+            for (let i = 0; i < bindMapArray.length; i++) {
+                const bindMap = bindMapArray[i];
+                let processObjectOnlyIfMap = bindMap.processObjectOnlyIf;
+    
+                if (!processObjectOnlyIfMap) throw `Atribute processObjectOnlyIf is required when more than one bind is given`;
+
+                let isProper = true;
+                for (let [attribute, valuesList] of processObjectOnlyIfMap) {
+                    if (!object[attribute]) throw `Attribute "${attribute}" defined in mapping.processObjectOnlyIf does not exist in source object`;
+                    if (!valuesList.includes(object[attribute])) {
+                        isProper = false;
+                        break;
+                    }
+                }
+                if (isProper) {
+                    return bindMap;
+                }
+            }
+            
+            throw `There is no proper bindmap to object "${JSON.stringify(object, null, 2)}" defined in processObjectOnlyIf in bindMapArray`;
+        } 
+    }
+
+    convert(dataObjects, bindingMapArray, opts) {
         let returnObjects = [];
-        let header = (bindingMap.header != null) ? dataObjects[bindingMap.header] : null;
-        let footer = (bindingMap.footer != null) ? dataObjects[dataObjects.length + bindingMap.footer] : null;
-        let skipObjectIfMap = (bindingMap.skipObjectIf) ? bindingMap.skipObjectIf : null;
+        let header = (opts && opts.header != undefined && opts.header != null) ? dataObjects[opts.header] : null;
+        let footer = (opts && opts.footer != undefined && opts.footer != null) ? dataObjects[dataObjects.length + opts.footer] : null;
 
         //start 1(one) object after the header object
-        let i = (bindingMap.header != null) ? bindingMap.header + 1 : 0;
+        let i = (opts && opts.header != undefined && opts.header != null) ? opts.header + 1 : 0;
         //dont process footer object (stop one object before)  //footer has negative value
-        let dataObjectsLenght = (bindingMap.footer != null) ? dataObjects.length + bindingMap.footer : dataObjects.length;
+        let dataObjectsLenght = (opts && opts.footer != undefined && opts.footer != null) ? dataObjects.length + opts.footer : dataObjects.length;
+
+        if (Array.isArray(bindingMapArray)) {
+            if (bindingMapArray.length == 0) throw `BindingMapArray is required`;
+        } else {
+            throw `BindingMapArray is required or invalid. it must be an array`;
+        }
+
         for (; i < dataObjectsLenght; i++) {
             let sourceObject = dataObjects[i];
             let destinationObject = {};
 
+            let bindingMap = this.getProperBindMap(bindingMapArray,sourceObject);
+
+            let skipObjectIfMap = (bindingMap.skipObjectIf) ? bindingMap.skipObjectIf : null;
             if (skipObjectIfMap && this.skipCurrentLine(skipObjectIfMap, sourceObject)) continue;
 
             for (let j = 0; j < bindingMap.bindings.length; j++) {

@@ -7,7 +7,7 @@ const { Converter } = require("./convertHelper");
 fs.readFile('./files/358M4121010500151789.txt', 'utf8', (err, data) => {
     const dataObjects = getObjectsFromFile(data, getFileMapping());
     // console.log(JSON.stringify(dataObjects, null, 2));
-    const eventObjects = new Converter().convert(dataObjects, getBindingMap());
+    const eventObjects = new Converter().convert(dataObjects, [getBindingMap()], { header: 0, footer: -1});
     console.log(JSON.stringify(eventObjects, null, 2));
 });
 
@@ -270,8 +270,6 @@ function getFileMapping() {
 
 function getBindingMap() {
   return  {
-      header: 0,   //null for no header
-      footer: -1,  //null for no footer
       skipObjectIf: new Map([
         ['regexc', [ '41.01', '41.20', '41.30', '41.80', '41.99' ],],
       ]),
@@ -310,7 +308,7 @@ function getExpectedPackagesBindingMap() {
 };
 
 function bind__expectedPackages(currentObject) {
-  return new Converter().convert([currentObject], getExpectedPackagesBindingMap())
+  return new Converter().convert([currentObject], [getExpectedPackagesBindingMap()])
 };
 
 function getPackagesBindingMap() {
@@ -335,7 +333,7 @@ function bind__packages(currentObject, header, footer, forthcomingObjectList) {
     } else break;
   }
 
-  return new Converter().convert(packagesArray, getPackagesBindingMap());
+  return new Converter().convert(packagesArray, [getPackagesBindingMap()]);
 };
 
 function bind__packages_quantity(currentObject) { 
@@ -381,7 +379,7 @@ function bind__receptionLines(currentObject, header, footer, forthcomingObjectLi
   }
   // console.log(JSON.stringify(receptionLinesArray, null, 2));
 
-  return new Converter().convert(receptionLinesArray, getReceptionLinesMap());
+  return new Converter().convert(receptionLinesArray, [getReceptionLinesMap()]);
 };
 
 function bind__receptionLines_physicalStockExpirationDate(currentObject, header, footer, forthcomingObjectList) {

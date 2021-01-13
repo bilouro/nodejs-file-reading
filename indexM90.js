@@ -7,7 +7,7 @@ const { Converter } = require("./convertHelper");
 fs.readFile('./files/358M9020122900148760.txt', 'utf8', (err, data) => {
     const dataObjects = getObjectsFromFile(data, getFileMapping());
     // console.log(dataObjects);
-    const eventObjects = new Converter().convert(dataObjects, getBindingMap());
+    const eventObjects = new Converter().convert(dataObjects, [getBindingMap()], { header: 0, footer: -1});
     console.log(JSON.stringify(eventObjects, null, 2));
 });
 
@@ -196,7 +196,7 @@ function bind__physicalStocksArray(currentObject, header, footer, forthcomingObj
     } else break;
   }
 
-  return new Converter().convert(physicalStocksArray, getPhysicalStocksBindingMap())
+  return new Converter().convert(physicalStocksArray, [getPhysicalStocksBindingMap()])
 };
 
 function getBlockedStocksBindingMap() {
@@ -238,5 +238,5 @@ function bind__blockedStocksArray(currentObject, header, footer, forthcomingObje
     } else break;
   }
 
-  return new Converter().convert(blockedStocksArray, getBlockedStocksBindingMap())
+  return new Converter().convert(blockedStocksArray, [getBlockedStocksBindingMap()])
 };

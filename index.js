@@ -5,10 +5,10 @@ const { getObjectsFromFile } = require("./positionalFileHelper");
 const { Converter } = require("./convertHelper");
 
 // fs.readFile('./files/358M8020122900148776.txt', 'utf8', (err, data) => {
-fs.readFile('./files/358M8020123000149864.txt', 'utf8', (err, data) => {
+  fs.readFile('./files/358M80SUMcrlf.txt', 'utf8', (err, data) => {
     const dataObjects = getObjectsFromFile(data, getFileMapping());
     // console.log(dataObjects);
-    const eventObjects = new Converter().convert(dataObjects, getBindingMap());
+    const eventObjects = new Converter().convert(dataObjects, [getBindingMap8080minus(), getBindingMap8080plus(), getBindingMap8010()], { header: 0, footer: -1});
     console.log(JSON.stringify(eventObjects, null, 2));
 });
 
@@ -64,7 +64,7 @@ function getFileMapping() {
           { name: 'codfon', initialPosition: 30, length: 1, type: 'integer', required: true },
           { name: 'codmvt', initialPosition: 31, length: 2, type: 'string', required: true },
           { name: 'senmvt', initialPosition: 33, length: 1, type: 'string', required: true },
-          { name: 'motmvt', initialPosition: 34, length: 3, type: 'string', required: true },
+          { name: 'motmvt', initialPosition: 34, length: 3, type: 'string', required: false },
           { name: 'edimvt', initialPosition: 37, length: 3, type: 'string', required: true },
           { name: 'refmvt', initialPosition: 40, length: 30, type: 'string', required: true },
           { name: 'uvcmvt', initialPosition: 70, length: 9, type: 'integer', required: true },
@@ -85,7 +85,7 @@ function getFileMapping() {
           { name: 'codpal', initialPosition: 183, length: 18, type: 'string', required: true },
           { name: 'datfvi', initialPosition: 201, length: 8, type: 'integer', required: true },
           { name: 'numdim', initialPosition: 209, length: 8, type: 'integer', required: true },
-          { name: 'codtie', initialPosition: 217, length: 14, type: 'string', required: true },
+          { name: 'codtie', initialPosition: 217, length: 14, type: 'string', required: false },
           { name: 'typtie', initialPosition: 231, length: 1, type: 'string', required: true },
           { name: 'numcde', initialPosition: 232, length: 8, type: 'integer', required: false },
           { name: 'snucde', initialPosition: 240, length: 3, type: 'integer', required: false },
@@ -123,10 +123,13 @@ function getFileMapping() {
   };
 }
 
-function getBindingMap() {
+
+// StockAdjustmentHasBeenDone -> 80.00.CODMVT = 10
+function getBindingMap8010() {
   return  {
-      header: 0,   //null for no header
-      footer: -1,  //null for no footer
+      processObjectOnlyIf: new Map([
+        ['codmvt', [ '10',],],
+      ]),
       bindings: [
               { destination: 'codmvt', source: 'codmvt',                      type: 'copy' },
               { destination: 'senmvt', source: 'senmvt',                      type: 'copy' },
@@ -147,51 +150,55 @@ function getBindingMap() {
       }            
 };
 
-// StockAdjustmentHasBeenDone -> 80.00.CODMVT = 10
-// 
-// { destination: 'identifier', source: 'refmvt',                  type: 'copy' },
-// { destination: 'collaboratorIdentifier',                        type: 'fixed', value: null },
-// { destination: 'productReferenceAdeo',                          type: 'fixed', value: null },
-// { destination: 'productReferenceBU', source: 'codpro',          type: 'copy' },
-// { destination: 'receptionIdentifier',                           type: 'fixed', value: null },
-// { destination: 'adjustmentDate',                                type: 'function', value: bind__date_epoch },
-// { destination: 'quantity',                                      type: 'function', value: bind__stockAdjustmentHasBeenDone_quantity },
-// { destination: 'reason', source: 'motmvt',                      type: 'copy' },
-// { destination: 'blockedStock.type',                             type: 'fixed', value: null },
-// { destination: 'blockedStock.reason',                           type: 'fixed', value: null },
-// { destination: 'sourcingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
-// { destination: 'sourcingLocation.identifier', source: 'codact', type: 'copy' },
-// { destination: 'sourcingLocation.type',                         type: 'fixed', value: 'warehouse' },
 
 // ProductHasBeenBlocked -> 80.00.CODMVT = 80 and 80.00.SENMVT = "-"
-//
-// { destination: 'identifier', source: 'refmvt',                  type: 'copy' },
-// { destination: 'collaboratorIdentifier',                        type: 'fixed', value: null },
-// { destination: 'productReferenceAdeo',                          type: 'fixed', value: null },
-// { destination: 'productReferenceBU', source: 'codpro',          type: 'copy' },
-// { destination: 'blockingType',                                  type: 'fixed', value: 'blocked' },
-// { destination: 'reason', source: 'edimvt',                      type: 'copy' },
-// { destination: 'previousType',                                  type: 'fixed', value: null },
-// { destination: 'previousReason',                                type: 'fixed', value: null },
-// { destination: 'movementDate',                                  type: 'function', value: bind__date_epoch },
-// { destination: 'quantity', source: 'uvcmvt',                    type: 'copy' },
-// { destination: 'sourcingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
-// { destination: 'sourcingLocation.identifier', source: 'codact', type: 'copy' },
-// { destination: 'sourcingLocation.type',                         type: 'fixed', value: 'warehouse' },
+function getBindingMap8080minus() {
+  return  {
+      processObjectOnlyIf: new Map([
+        ['codmvt', [ '80',],],
+        ['senmvt', [ '-',],],
+      ]),
+      bindings: [
+              { destination: 'identifier', source: 'refmvt',                  type: 'copy' },
+              { destination: 'collaboratorIdentifier',                        type: 'fixed', value: null },
+              { destination: 'productReferenceAdeo',                          type: 'fixed', value: null },
+              { destination: 'productReferenceBU', source: 'codpro',          type: 'copy' },
+              { destination: 'blockingType',                                  type: 'fixed', value: 'blocked' },
+              { destination: 'reason', source: 'edimvt',                      type: 'copy' },
+              { destination: 'previousType',                                  type: 'fixed', value: null },
+              { destination: 'previousReason',                                type: 'fixed', value: null },
+              { destination: 'movementDate',                                  type: 'function', value: bind__date_epoch },
+              { destination: 'quantity', source: 'uvcmvt',                    type: 'copy' },
+              { destination: 'sourcingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
+              { destination: 'sourcingLocation.identifier', source: 'codact', type: 'copy' },
+              { destination: 'sourcingLocation.type',                         type: 'fixed', value: 'warehouse' },
+          ]
+      }            
+};
 
 // ProductHasBeenUnblocked -> 80.00.CODMVT = 80 and 80.00.SENMVT = "+"
-//
-// { destination: 'identifier', source: 'refmvt',                  type: 'copy' },
-// { destination: 'collaboratorIdentifier',                        type: 'fixed', value: null },
-// { destination: 'productReferenceAdeo',                          type: 'fixed', value: null },
-// { destination: 'productReferenceBU', source: 'codpro',          type: 'copy' },
-// { destination: 'previousType',                                  type: 'fixed', value: 'blocked' },
-// { destination: 'previousReason', source: 'edimvt',              type: 'copy' },
-// { destination: 'movementDate',                                  type: 'function', value: bind__date_epoch },
-// { destination: 'quantity', source: 'uvcmvt',                    type: 'copy' },
-// { destination: 'sourcingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
-// { destination: 'sourcingLocation.identifier', source: 'codact', type: 'copy' },
-// { destination: 'sourcingLocation.type',                         type: 'fixed', value: 'warehouse' },
+function getBindingMap8080plus() {
+  return  {
+      processObjectOnlyIf: new Map([
+        ['codmvt', [ '80',],],
+        ['senmvt', [ '+',],],
+      ]),
+      bindings: [
+              { destination: 'identifier', source: 'refmvt',                  type: 'copy' },
+              { destination: 'collaboratorIdentifier',                        type: 'fixed', value: null },
+              { destination: 'productReferenceAdeo',                          type: 'fixed', value: null },
+              { destination: 'productReferenceBU', source: 'codpro',          type: 'copy' },
+              { destination: 'previousType',                                  type: 'fixed', value: 'blocked' },
+              { destination: 'previousReason', source: 'edimvt',              type: 'copy' },
+              { destination: 'movementDate',                                  type: 'function', value: bind__date_epoch },
+              { destination: 'quantity', source: 'uvcmvt',                    type: 'copy' },
+              { destination: 'sourcingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
+              { destination: 'sourcingLocation.identifier', source: 'codact', type: 'copy' },
+              { destination: 'sourcingLocation.type',                         type: 'fixed', value: 'warehouse' },
+          ]
+      }            
+};
+
 
 function bind__date_epoch(currentObject) {
   return currentObject.datmvt.getTime();
