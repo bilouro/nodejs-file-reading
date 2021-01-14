@@ -114,7 +114,7 @@ function getFileMapping() {
           { name: 'codtdd', initialPosition: 146, length: 3, type: 'string', required: false },
           { name: 'nummtr', initialPosition: 149, length: 20, type: 'string', required: false },
           { name: 'disexc', initialPosition: 169, length: 87, type: 'string', required: false },
-          { name: 'id4100', type: 'parent', parentDiscriminator:'41.00', parentAttribute:'uuid'},
+          { name: 'id4100', type: 'parent', parentDiscriminator:'41.00', childName:'children4101',parentAttribute:'uuid'},
         ],
       ],
       [
@@ -157,7 +157,7 @@ function getFileMapping() {
           { name: 'indpro', initialPosition: 241, length: 2, type: 'string', required: false },
           { name: 'indproa', initialPosition: 243, length: 8, type: 'integer', required: false },
           { name: 'disexc', initialPosition: 251, length: 5, type: 'string', required: false },
-          { name: 'id4100', type: 'parent', parentDiscriminator:'41.00', parentAttribute:'uuid'},
+          { name: 'id4100', type: 'parent', parentDiscriminator:'41.00', childName:'children4120',parentAttribute:'uuid'},
         ],
       ],
       [
@@ -196,7 +196,7 @@ function getFileMapping() {
           { name: 'prxpro', initialPosition: 233, length: 9, type: 'integer', required: false },
           { name: 'pdbpal', initialPosition: 242, length: 7, type: 'integer', required: false },
           { name: 'pdnrec', initialPosition: 249, length: 7, type: 'integer', required: false },
-          { name: 'id4120', type: 'parent', parentDiscriminator:'41.20', parentAttribute:'uuid'},
+          { name: 'id4120', type: 'parent', parentDiscriminator:'41.20', childName:'children4130',parentAttribute:'uuid'},
         ],
       ],
       [
@@ -221,7 +221,7 @@ function getFileMapping() {
           { name: 'datemb', initialPosition: 122, length: 8, type: 'date', required: false, dateFormat: 'YYYYMMDD', nullIf: ['00000000'] },
           { name: 'typtie', initialPosition: 130, length: 1, type: 'string', required: false },
           { name: 'disexc', initialPosition: 131, length: 125, type: 'string', required: false },
-          { name: 'id4100', type: 'parent', parentDiscriminator:'41.00', parentAttribute:'uuid'},
+          { name: 'id4100', type: 'parent', parentDiscriminator:'41.00', childName:'children4180', parentAttribute:'uuid'},
         ],
       ],
       [
@@ -240,7 +240,7 @@ function getFileMapping() {
           { name: 'coltot', initialPosition: 56, length: 9, type: 'integer', required: false },
           { name: 'totpro', initialPosition: 65, length: 5, type: 'integer', required: false },
           { name: 'disexc', initialPosition: 70, length: 186, type: 'string', required: false },
-          { name: 'id4100', type: 'parent', parentDiscriminator:'41.00', parentAttribute:'uuid'},
+          { name: 'id4100', type: 'parent', parentDiscriminator:'41.00', childName:'children4199',parentAttribute:'uuid'},
         ],
       ],
       [
