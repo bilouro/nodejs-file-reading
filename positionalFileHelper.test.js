@@ -1,6 +1,7 @@
 const pfh = require("./positionalFileHelper");
 const { getFileMapping: getFileMappingM80 } = require("./mappers/m80FileMapping");
 const { getFileMapping: getFileMappingM90 } = require("./mappers/m90FileMapping");
+const { getFileMapping: getFileMappingM41 } = require("./mappers/m41FileMapping");
 
 //isLineHasData
   test("isLineHasData :: passing '' expect false ", () => {
@@ -112,7 +113,7 @@ test("getObjectsFromFile :: testing header of m90 ", () => {
         expect( result[0].pardst ).toEqual(null);
         expect( result[0].codact ).toEqual("358");
         expect( result[0].iglsit ).toEqual(0);
-        expect( result[0].edisit ).toEqual('003');
+        expect( result[0].edisit ).toEqual(3);
         expect( result[0].imaexc ).toEqual(0);
         expect( result[0].disexc ).toEqual(null);
       });
@@ -209,9 +210,9 @@ test("getObjectsFromFile :: testing header of M80 ", () => {
       expect( result[0].bibdst ).toEqual(null);
       expect( result[0].pgmdst ).toEqual(null);
       expect( result[0].pardst ).toEqual(null);
-      expect( result[0].codact ).toEqual("358");
+      expect( result[0].codact ).toEqual(358);
       expect( result[0].iglsit ).toEqual(10);
-      expect( result[0].edisit ).toEqual('003');
+      expect( result[0].edisit ).toEqual(3);
       expect( result[0].imaexc ).toEqual(0);
       expect( result[0].disexc ).toEqual(undefined);
     });
@@ -236,7 +237,7 @@ const result = pfh.getObjectsFromFile(
     expect( result[0].edimvt ).toEqual('I');
     expect( result[0].refmvt ).toEqual("850122");
     expect( result[0].uvcmvt ).toEqual(24);
-    expect( result[0].codact ).toEqual('358');
+    expect( result[0].codact ).toEqual(358);
     expect( result[0].codcli ).toEqual(null);
     expect( result[0].codpro ).toEqual("18817334");
     expect( result[0].valpro ).toEqual(0);
@@ -287,4 +288,122 @@ test("getObjectsFromFile :: testing footer of M80 ", () => {
       expect( result[0].bibdtq ).toEqual(null);
       expect( result[0].idemsg ).toEqual(null);
       expect( result[0].dsiexc ).toEqual(null);
+    });
+
+// Unit tests for M41
+test("getObjectsFromFile :: testing header of M41 ", () => {
+  const result = pfh.getObjectsFromFile(
+      '00.00 FGE50LMALV    EXTRACT_41    20201229085117238291905.00LMPT0000M41       FGX10     Recepcao N: 00012649-000                                                        358010003           00000000',
+      getFileMappingM41());
+
+      expect( result[0].codexc ).toEqual(0);
+      expect( result[0].sepexc ).toEqual('.');
+      expect( result[0].scoexc ).toEqual(0);
+      expect( result[0].trtexc ).toEqual(null);
+      expect( result[0].emtexc ).toEqual("FGE50LMALV");
+      expect( result[0].rctexc ).toEqual("EXTRACT_41");
+      expect( result[0].datexc ).toEqual(new Date(2020, 11, 29, 8, 51, 17)); 
+      expect( result[0].heuexc ).toEqual("085117");
+      expect( result[0].numexc ).toEqual(2382919);
+      expect( result[0].acqexc ).toEqual("0");
+      expect( result[0].verexc ).toEqual("5.00");
+      expect( result[0].nomsys ).toEqual("LMPT0000");
+      expect( result[0].nomdtq ).toEqual("M41");
+      expect( result[0].bibdtq ).toEqual("FGX10");
+      expect( result[0].libexc ).toEqual("Recepcao N: 00012649-000");
+      expect( result[0].bibdst ).toEqual(null);
+      expect( result[0].pgmdst ).toEqual(null);
+      expect( result[0].pardst ).toEqual(null);
+      expect( result[0].codact ).toEqual("358");
+      expect( result[0].iglsit ).toEqual(10);
+      expect( result[0].edisit ).toEqual(3);
+      expect( result[0].imaexc ).toEqual(0);
+      expect( result[0].disexc ).toEqual(undefined);
+    });
+test("getObjectsFromFile :: testing content of M41.00 ", () => {
+  const result = pfh.getObjectsFromFile(
+      '41.00 00012649000330959                                  ADASTD1358204286        200           202012220000202012220700202012220802293                    10                 03                                       00000000   18425432000008 43ZH51',
+      getFileMappingM41());
+
+      expect( result[0].codexc ).toEqual(41);
+      expect( result[0].sepexc ).toEqual('.');
+      expect( result[0].scoexc ).toEqual(0);
+      expect( result[0].trtexc ).toEqual(null);
+      expect( result[0].numrec ).toEqual(12649);
+      expect( result[0].snurec ).toEqual(0);
+      expect( result[0].refrec ).toEqual('330959'); 
+      expect( result[0].refexp ).toEqual(null);
+      expect( result[0].codapp ).toEqual(null);
+      expect( result[0].codldr ).toEqual("ADA");
+      expect( result[0].codtre ).toEqual("STD");
+      expect( result[0].oricde ).toEqual("1");
+      expect( result[0].codact ).toEqual(358);
+      expect( result[0].codfou ).toEqual(204286);
+      expect( result[0].codtra ).toEqual("200");
+      expect( result[0].dtirec ).toEqual(new Date(2020, 11, 22, 0, 0, 0));
+      expect( result[0].heirec ).toEqual(0);
+      expect( result[0].dtmrec ).toEqual(new Date(2020, 11, 22, 7, 0, 0));
+      expect( result[0].hemrec ).toEqual(700);
+      expect( result[0].dtrrec ).toEqual(new Date(2020, 11, 22, 8, 2, 0));
+      expect( result[0].herrec ).toEqual(802);
+      expect( result[0].kairec ).toEqual(293);
+      expect( result[0].ctrrec ).toEqual(null);
+      expect( result[0].refcnt ).toEqual(null);
+      expect( result[0].cmtrec1a ).toEqual('10');
+      expect( result[0].cmtrec1b ).toEqual(null);
+      expect( result[0].cmtrec1c ).toEqual(null);
+      expect( result[0].cmtrec1d ).toEqual(null);
+      expect( result[0].cmtrec1e ).toEqual('03');
+      expect( result[0].cmtrec1 ).toEqual(null);
+      expect( result[0].cmtrec2 ).toEqual(null);
+      expect( result[0].datrlq ).toEqual(null);
+      expect( result[0].codacr ).toEqual(null);
+      expect( result[0].natrec ).toEqual('1');
+      expect( result[0].edifou ).toEqual('8425432000008');
+      expect( result[0].codcnt ).toEqual('43ZH51');
+      expect( result[0].typrmt ).toEqual(null);
+      expect( result[0].disexc ).toEqual(null);
+    });
+
+test("getObjectsFromFile :: testing content of M41.20 ", () => {
+  const result = pfh.getObjectsFromFile(
+      '41.20 00012649000330959                        00002358              19474490         00000000006UNI                 0000000   000000006000000000000000000   000000000   0000000000000000010000001920020201222                    0000000000               00001',
+      getFileMappingM41());
+
+      expect( result[0].codexc ).toEqual(41);
+      expect( result[0].sepexc ).toEqual('.');
+      expect( result[0].scoexc ).toEqual(20);
+      expect( result[0].trtexc ).toEqual(null);
+      expect( result[0].numrec ).toEqual(12649);
+      expect( result[0].snurec ).toEqual(0);
+      expect( result[0].refrec ).toEqual('330959'); 
+      expect( result[0].nlirec ).toEqual(2);
+      expect( result[0].codact ).toEqual("358");
+      expect( result[0].codcli ).toEqual(null);
+      expect( result[0].codpro ).toEqual("19474490");
+      expect( result[0].valpro ).toEqual(0);
+      expect( result[0].uvcrea ).toEqual(6);
+      expect( result[0].unicde ).toEqual('UNI');
+      expect( result[0].codprn ).toEqual(null);
+      expect( result[0].typope ).toEqual("0");
+      expect( result[0].numope ).toEqual(0);
+      expect( result[0].codacr ).toEqual(null);
+      expect( result[0].uvcrec ).toEqual(6);
+      expect( result[0].uvcgra ).toEqual(0);
+      expect( result[0].uvcimm ).toEqual(0);
+      expect( result[0].motimm ).toEqual(null);
+      expect( result[0].uvcrfu ).toEqual(0);
+      expect( result[0].motrfu ).toEqual(null);
+      expect( result[0].uvcrlq ).toEqual(0);
+      expect( result[0].datfvi ).toEqual(null);
+      expect( result[0].mespro ).toEqual('1');
+      expect( result[0].pdnrec ).toEqual(19200);
+      expect( result[0].datfab ).toEqual(new Date(2020, 11, 22, 0, 0, 0));
+      expect( result[0].codlot ).toEqual(null);
+      expect( result[0].numlot ).toEqual(0);
+      expect( result[0].recsol ).toEqual('0');
+      expect( result[0].codmtr ).toEqual(null);
+      expect( result[0].indpro ).toEqual(null);
+      expect( result[0].indproa ).toEqual(null);
+      expect( result[0].disexc ).toEqual('00001');
     });
