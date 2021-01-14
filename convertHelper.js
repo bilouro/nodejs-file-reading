@@ -4,7 +4,7 @@ class Converter {
 
     getProperBindMap(bindMapArray, object) {
         if (bindMapArray.length == 1){
-            const bindMap = bindMapArray[0];
+            return bindMapArray[0];
 
         } else { // (bindMapArray.length > 1) {
             for (let i = 0; i < bindMapArray.length; i++) {
