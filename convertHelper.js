@@ -62,19 +62,19 @@ class Converter {
 
                 switch (bind.type) {
                     case 'copy':
-                        this.setNestedAttribute(destinationObject, bind.destination, sourceObject[bind.source]);
+                        setNestedAttribute(destinationObject, bind.destination, sourceObject[bind.source]);
                         break;
                     case 'header':
-                        this.setNestedAttribute(destinationObject, bind.destination, header[bind.source]);
+                        setNestedAttribute(destinationObject, bind.destination, header[bind.source]);
                         break;
                     case 'footer':
-                        this.setNestedAttribute(destinationObject, bind.destination, footer[bind.source]);
+                        setNestedAttribute(destinationObject, bind.destination, footer[bind.source]);
                         break;
                     case 'fixed':
-                        this.setNestedAttribute(destinationObject, bind.destination, bind.value);
+                        setNestedAttribute(destinationObject, bind.destination, bind.value);
                         break;
                     case 'function':
-                        this.setNestedAttribute(destinationObject, 
+                        setNestedAttribute(destinationObject, 
                             bind.destination, 
                             bind.value(sourceObject, header, footer, dataObjects.slice(i+1, dataObjectsLenght))
                             );
