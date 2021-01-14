@@ -39,7 +39,7 @@ function getBindingMap() {
   }            
 };
 
-function bind__date_epoch(currentObject, header, footer, forthcomingObjectList) {
+function bind__date_epoch(currentObject) {
   return currentObject.dtrrec.getTime();
 };
 
@@ -71,18 +71,16 @@ function bind__packages(currentObject, header, footer, forthcomingObjectList) {
   for (let i = 0; i < forthcomingObjectList.length; i++) {
     if (forthcomingObjectList[i].codexc === 41 && forthcomingObjectList[i].scoexc === 20) {
       packagesArray.push({...forthcomingObjectList[i]});
-    } else if (forthcomingObjectList[i].codexc === 41 && forthcomingObjectList[i].scoexc === 30) {
-      const lastPushedParentObject = packagesArray[packagesArray.length - 1];
-      if (!lastPushedParentObject.children) lastPushedParentObject.children = [];
-      lastPushedParentObject.children.push({...forthcomingObjectList[i]});
-    } else break;
+    } else if (forthcomingObjectList[i].codexc === 41 && forthcomingObjectList[i].scoexc === 00) {
+      break;
+    }
   }
 
   return new Converter().convert(packagesArray, [getPackagesBindingMap()]);
 };
 
 function bind__packages_quantity(currentObject) { 
-  const firstChild = currentObject.children[0];
+  const firstChild = currentObject.children4130[0];
   if (firstChild.pcbpro !== 0) {
     if (firstChild.spcpro !== 0) {
       return (currentObject.uvcrec + currentObject.uvcimm) / firstChild.pcbpro / firstChild.spcpro;
@@ -92,7 +90,7 @@ function bind__packages_quantity(currentObject) {
   return currentObject.uvcrec + currentObject.uvcimm;
 };
 
-function bind__businessUnitIdentifier(currentObject, header, footer, forthcomingObjectList) {
+function bind__businessUnitIdentifier(currentObject, header) {
   return header.edisit;
 };
 
@@ -109,8 +107,9 @@ function getReceptionLinesMap() {
       { destination: 'transferID',                            type: 'fixed', value: null },
       { destination: 'purchaseOrderID', source: 'refrec',     type: 'copy' },
       { destination: 'customerOrderNumber',                   type: 'fixed', value: null },
+      { destination: 'blockedStockMovement',                  type: 'function', value: bind__receptionLines_blockedStockMovement },
     ]
-  }
+  };
 };
 
 function bind__receptionLines(currentObject, header, footer, forthcomingObjectList) {
@@ -122,12 +121,42 @@ function bind__receptionLines(currentObject, header, footer, forthcomingObjectLi
       break;
     }
   }
-  // console.log(JSON.stringify(receptionLinesArray, null, 2));
 
   return new Converter().convert(receptionLinesArray, [getReceptionLinesMap()]);
 };
 
-function bind__receptionLines_physicalStockExpirationDate(currentObject, header, footer, forthcomingObjectList) {
+function bind__receptionLines_physicalStockExpirationDate(currentObject) {
   if (currentObject.datfvi) return currentObject.datfvi.getTime();
   return null;
-}
+};
+
+function getBlockedStockMovementBindingMap() {
+  return {
+    bindings: [
+      { destination: 'blockingType', type: 'function', value: bind__blockingType },
+      { destination: 'movementDate', type: 'function', value: bind__movementDate },
+      { destination: 'quantity', type: 'function', value: bind__quantity },
+      { destination: 'reason', type: 'fixed', value: null },
+    ]
+  };
+};
+
+function bind__receptionLines_blockedStockMovement(currentObject) {  
+  const filtered4130 = currentObject.children4130.filter((item) => item.motimm !== null);
+  if (filtered4130.length > 0) {
+    return new Converter().convert(filtered4130, [getBlockedStockMovementBindingMap()]);
+  }
+  return null;
+};
+
+function bind__blockingType(currentObject) {
+  return currentObject.motimm === 'CAS' ? 'broken' : 'dispute';
+};
+
+function bind__movementDate(currentObject) {
+  return currentObject.parent.parent.dtrrec.getTime();
+};
+
+function bind__quantity(currentObject) {
+  return currentObject.uvcmvt / currentObject.parent.codmtr;
+};
