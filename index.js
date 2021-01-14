@@ -131,8 +131,6 @@ function getBindingMap8010() {
         ['codmvt', [ '10',],],
       ]),
       bindings: [
-              { destination: 'codmvt', source: 'codmvt',                      type: 'copy' },
-              { destination: 'senmvt', source: 'senmvt',                      type: 'copy' },
               { destination: 'identifier', source: 'refmvt',                  type: 'copy' },
               { destination: 'collaboratorIdentifier',                        type: 'fixed', value: null },
               { destination: 'productReferenceAdeo',                          type: 'fixed', value: null },
