@@ -1,6 +1,8 @@
 const os = require('os');
 const moment = require('moment');
 const { v4: uuidv4 } = require('uuid');
+const { setNestedAttribute, pushNestedAttribute } = require("./nestedUtil");
+
 
 function getObjectsFromFile(data, fileMapping) {
     let dataObjectsArray = [];
@@ -49,7 +51,14 @@ function getObjectFromLine(lineMapping, line, lineNumber, parentMap) {
                 dataObject[attribute.name] = parseString(value, attribute, lineNumber);
                 break;
             case 'parent':
+                if (attribute.name == 'parent') throw "Attribute Parent, declared in lineMapping. Could not be named 'parent', due to, its reserved to de parent object";
                 dataObject[attribute.name] = parentMap.get(attribute.parentDiscriminator)[attribute.parentAttribute];
+                
+                //adding children to parent
+                pushNestedAttribute(parentMap.get(attribute.parentDiscriminator), attribute.childName, dataObject);
+                
+                //adding parent attribute to the children.
+                dataObject['parent'] = parentMap.get(attribute.parentDiscriminator);
                 break;
             default:
                 throw `Attribute type "${attribute.type}", declared in lineMapping is not valid or not implemented. line number ${lineNumber}.`;

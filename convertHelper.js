@@ -1,4 +1,6 @@
 const { isDate } = require("moment");
+const { setNestedAttribute } = require("./nestedUtil");
+
 
 class Converter {
 
@@ -94,24 +96,5 @@ class Converter {
         return false;
     }
 
-    setNestedAttribute(object, path, value) {
-        let tempObject;
-        if (!path) throw 'Argument path not informed';
-        if (!object) throw 'Argument object not informed';
-
-        let splitedPath = path.split('.');
-        if (splitedPath.length == 1) {
-            object[path] = value;
-        } else { // > 1
-            tempObject = object;
-            for (let index = 0; index < splitedPath.length - 1; index++) {
-                const nestedObject = splitedPath[index];
-                if (!tempObject[nestedObject]) tempObject[nestedObject] = {};
-                tempObject = tempObject[nestedObject];
-            }
-            let attribute = splitedPath[splitedPath.length - 1];
-            tempObject[attribute] = value;
-        }
-    }
 }
 exports.Converter = Converter;

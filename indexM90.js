@@ -99,7 +99,7 @@ function getFileMapping() {
         '90.60',
         [
           ...mapping90,
-          { name: 'id9000', type: 'parent', parentDiscriminator:'90.00', parentAttribute:'uuid'},
+          { name: 'id9000', type: 'parent', childName:'children9060', parentDiscriminator:'90.00', parentAttribute:'uuid'},
         ],
       ],
       [
