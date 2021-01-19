@@ -24,24 +24,28 @@ function dbConversion(fileMappings = [], header = false, footer = false, lines =
                 break;
               case 'date':
                 // 2020-01-01T00:00:00.000Z
-                dataType = 'DataTypes.String(24)';
+                dataType = 'DataTypes.STRING(24)';
+                break;
+              case 'parent':
+                // uuid of parent
+                dataType = 'DataTypes.STRING(36)';
                 break;
               default: 
-                dataType = `DataTypes.String(${field.length})`;
+                dataType = `DataTypes.STRING(${field.length})`;
             }
             dbAttributes[field.name] = { field: field.name, type: dataType, allowNull: true };
           } else {
             const previousLength = dbAttributes[field.name].type.split('(')[0] === 'DataTypes.String' ? Number(dbAttributes[field.name].type.split('(')[1].split(')')[0]): 0;
-            if (field.type === 'integer' || field.type === 'date') return;
+            if (field.type === 'integer' || field.type === 'date' || field.type === 'parent') return;
             else if (field.length === previousLength || field.length <= previousLength) return;
             dbAttributes[field.name].type = `DataTypes.String(${field.length})`;
           }
-
         })
       }
       
     });
   })
+  dbAttributes.uuid = { field: 'uuid', type: 'DataTypes.STRING(36)', allowNull: true };
 
   return dbAttributes
 };
