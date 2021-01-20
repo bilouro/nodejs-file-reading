@@ -13,7 +13,7 @@ function dbConversion(fileMappings = [], header = false, footer = false, lines =
       if (
         ((discriminator === '00' || discriminator === '00.00') && header ) || 
         ((discriminator === '99' || discriminator === '99.00') && footer) || 
-        ((discriminator !== '00' || discriminator !== '00.00') && (discriminator !== '99' || discriminator !== '99.00') && lines)) {
+        ((discriminator !== '00' && discriminator !== '00.00') && (discriminator !== '99' && discriminator !== '99.00') && lines)) {
       
         mappings.forEach(field => {
           if (!dbAttributes[field.name]) {
@@ -24,7 +24,7 @@ function dbConversion(fileMappings = [], header = false, footer = false, lines =
                 break;
               case 'date':
                 // 2020-01-01T00:00:00.000Z
-                dataType = 'DataTypes.STRING(24)';
+                dataType = 'DataTypes.DATE';
                 break;
               case 'parent':
                 // uuid of parent
@@ -35,10 +35,10 @@ function dbConversion(fileMappings = [], header = false, footer = false, lines =
             }
             dbAttributes[field.name] = { field: field.name, type: dataType, allowNull: true };
           } else {
-            const previousLength = dbAttributes[field.name].type.split('(')[0] === 'DataTypes.String' ? Number(dbAttributes[field.name].type.split('(')[1].split(')')[0]): 0;
+            const previousLength = dbAttributes[field.name].type.split('(')[0] === 'DataTypes.STRING' ? Number(dbAttributes[field.name].type.split('(')[1].split(')')[0]): 0;
             if (field.type === 'integer' || field.type === 'date' || field.type === 'parent') return;
             else if (field.length === previousLength || field.length <= previousLength) return;
-            dbAttributes[field.name].type = `DataTypes.String(${field.length})`;
+            dbAttributes[field.name].type = `DataTypes.STRING(${field.length})`;
           }
         })
       }
@@ -50,4 +50,4 @@ function dbConversion(fileMappings = [], header = false, footer = false, lines =
   return dbAttributes
 };
 
-console.log(JSON.stringify(dbConversion([getM80FileMapping(), getM90FileMapping(), getM41FileMapping()]), null, 2));
+console.log(dbConversion([getM80FileMapping(), getM90FileMapping(), getM41FileMapping()], false, true, false));

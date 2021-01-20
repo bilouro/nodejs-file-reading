@@ -2,8 +2,6 @@ const { Converter } = require("../convertHelper");
 
 function getBindingMap() {
   return  {
-      header: 0,   //null for no header
-      footer: -1,  //null for no footer
       skipObjectIf: new Map([
         ['regexc', [ '90.60',],],
       ]),
