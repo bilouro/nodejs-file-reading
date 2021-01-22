@@ -4,6 +4,7 @@ const { exit } = require('process');
 const { getObjectsFromFile } = require("./positionalFileHelper");
 const { Converter } = require("./convertHelper");
 const { getFileMapping } = require("./mappers/m51FileMapping");
+const { getBindingMap } = require('./mappers/m51BindMapping');
 const { uniquifyList } = require("./uniquifyHelper");
 
 function get5100UniqueValue(obj){
@@ -43,7 +44,8 @@ fs.readFile('./files/358M5121010700153317.txt', 'utf8', (err, data) => {
     // add header and footer to new list
     uniqueList.unshift(dataObjects[0]);
     uniqueList.push(dataObjects[dataObjects.length - 1]);
-    console.log(uniqueList);
+    // console.log(uniqueList);
     
+    const eventObjects = new Converter().convert(uniqueList, [getBindingMap()], { header: 0, footer: -1});
+    console.log(JSON.stringify(eventObjects, null, 2));
 });
-
