@@ -6,6 +6,13 @@ function getBindingMap() {
         ['regexc', [ '41.01', '41.20', '41.30', '41.80', '41.99' ],],
       ]),
       bindings: [
+          { destination: 'key.identifier', source: 'numrec',                  type: 'copy' },
+          { destination: 'key.deliveryLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
+          { destination: 'key.deliveryLocation.identifier', source: 'codact', type: 'copy' },
+          { destination: 'key.deliveryLocation.type',                         type: 'fixed', value: 'warehouse' },
+          { destination: 'key.shippingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
+          { destination: 'key.shippingLocation.identifier', source: 'codfou', type: 'copy' },
+          { destination: 'key.shippingLocation.type',                         type: 'fixed', value: 'supplier' },
           { destination: 'identifier', source: 'numrec',                  type: 'copy' },
           { destination: 'supplyCircuitType',                             type: 'fixed', value: 'stock' },
           { destination: 'validationDate',                                type: 'function', value: bind__date_epoch },
@@ -23,7 +30,7 @@ function getBindingMap() {
           { destination: 'shippingLocation.type',                         type: 'fixed', value: 'supplier' },
           { destination: 'receptionLines',                                type: 'function', value: bind__receptionLines },
         ]
-  }            
+  }
 };
 
 function bind__date_epoch(currentObject) {
