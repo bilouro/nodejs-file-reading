@@ -13,7 +13,7 @@ fs.readFile('./files/358M80SUMcrlf.txt', 'utf8', async (err, data) => {
 
   await DB.sync({ force: true });
 
-  const footer = dataObjects.pop();
+  const footer = [...dataObjects].pop();
   const [header, ...lines] = dataObjects;
   const headerFooterObj = {};
   Object.keys(header).forEach(key => {
