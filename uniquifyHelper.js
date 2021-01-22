@@ -29,7 +29,7 @@ function uniquifyList(list, attributesToMerge, getUniqueValueFunction) {
           // avoid overwrite preexisting values
           if (!preExistentDistinctObj[att]) {
             
-            //setting new parent if it is a object and already have parent attribute
+            //setting new parent if it is an object and already have parent attribute
             if (isObject(obj[att] && obj[att].parent != undefined)) obj[att].parent = preExistentDistinctObj;            
             
             preExistentDistinctObj[att] = obj[att];
