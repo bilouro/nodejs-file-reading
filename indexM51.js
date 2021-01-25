@@ -26,25 +26,15 @@ function get5100UniqueValue(obj){
 
 fs.readFile('./files/358M5121010700153317.txt', 'utf8', (err, data) => {
     const dataObjects = getObjectsFromFile(data, getFileMapping());
-    // console.log('======================================================');
-    // console.log('=         DATA OBJECTS                               =');
-    // console.log('======================================================');
-    // console.log(dataObjects);
 
     // filter by 51.00 lines
     const list5100 = dataObjects.filter(obj => obj.codexc == '51' && obj.scoexc == 0);
 
-
     const uniqueList = uniquifyList(list5100, ['children5101', 'children5105', 'children5130', 'children5199'], get5100UniqueValue);
-    // console.log('======================================================');
-    // console.log('=         DISTINCT                                   =');
-    // console.log('======================================================');
-    // console.log(uniqueList);
 
     // add header and footer to new list
     uniqueList.unshift(dataObjects[0]);
     uniqueList.push(dataObjects[dataObjects.length - 1]);
-    // console.log(uniqueList);
     
     const eventObjects = new Converter().convert(uniqueList, [getBindingMap()], { header: 0, footer: -1});
     console.log(JSON.stringify(eventObjects, null, 2));
