@@ -7,7 +7,6 @@ function getBindingMap() {
         ['regexc', [ '51.01', '51.05', '51.30', '51.31', '51.20', '51.27', '51.80', '51.99' ],],
       ]),
       bindings: [
-          { destination: 'test-cliliv', type: 'function', value: test },
           { destination: 'identifier', source: 'numtou',                  type: 'copy' },
           { destination: 'shippingDate', source: 'datexp',                  type: 'copy' },
           { destination: 'expectedDeliveryDate', source: 'datliv',                  type: 'copy' },
@@ -112,7 +111,6 @@ function bind__deliveryLocation_type(currentObject) {
 function getShipmentLoadingUnitsWithSSCHETBindingMap() {
   return {
     bindings: [
-      { destination: 'sschet', source: 'sschet', type: 'copy'},
       { destination: 'identifier', source: 'sschet', type: 'copy'},
       { destination: 'sscc', source: 'sschet', type: 'copy'},
       { destination: 'packageType', type: 'fixed', value: 'pallet'},
@@ -136,7 +134,6 @@ function getShipmentLoadingUnitsWithSSCHETBindingMap() {
 function getShipmentLoadingUnitsByCODPALBindingMap() {
   return {
     bindings: [
-      { destination: 'codpal', source: 'codpal', type: 'copy'},
       { destination: 'identifier', source: 'codpal', type: 'copy'},
       { destination: 'sscc', source: 'codpal', type: 'copy'},
       { destination: 'packageType', type: 'function', value: bind__shipmentLoadingUnits_packageType},
@@ -190,8 +187,9 @@ function bind__shipmentLoadingUnits(currentObject) {
 };
 
 function bind__shipmentLoadingUnits_CODPAL(currentObject) {
-  // TODO: need to concatenate 5130 objects on common CODPAL
-  return new Converter().convert(currentObject.children5130, [getShipmentLoadingUnitsByCODPALBindingMap()]);
+  const uniqueCODPAL = uniquifyList(currentObject.children5130,['children5131', 'children5120'], (obj) => obj.codpal);
+
+  return new Converter().convert(uniqueCODPAL, [getShipmentLoadingUnitsByCODPALBindingMap()]);
 };
 
 function bind__shipmentLoadingUnits_grossWeight(currentObject) {
