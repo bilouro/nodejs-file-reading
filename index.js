@@ -11,10 +11,10 @@ const { DB, dataTransfers, dataTransferLines, dataTransferEvents } = require('./
 fs.readFile('./files/358M80SUMcrlf.txt', 'utf8', async (err, data) => {
   const dataObjects = getObjectsFromFile(data, getFileMapping());
 
-  await DB.sync({ force: true });
+  await DB.sync({ alter: true });
 
-  const footer = [...dataObjects].pop();
   const [header, ...lines] = dataObjects;
+  const footer = lines.pop();
   const headerFooterObj = {};
   Object.keys(header).forEach(key => {
     headerFooterObj[`h_${key}`] = header[key];
