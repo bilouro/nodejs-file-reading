@@ -12,6 +12,7 @@ function getBindingMap8010() {
               { destination: 'identifier', source: 'refmvt',                      type: 'copy' },
               { destination: 'collaboratorIdentifier',                            type: 'fixed', value: null },
               { destination: 'productReferenceAdeo',                              type: 'fixed', value: null },
+              { destination: 'productReferenceBU', source: 'codpro',              type: 'copy' },
               { destination: 'receptionIdentifier',                               type: 'fixed', value: null },
               { destination: 'adjustmentDate',                                    type: 'function', value: bind__date_epoch },
               { destination: 'quantity',                                          type: 'function', value: bind__stockAdjustmentHasBeenDone_quantity },
@@ -86,14 +87,14 @@ function bind__date_epoch(currentObject) {
   return currentObject.datmvt.getTime();
 };
 
-function bind__stockAdjustmentHasBeenDone_quantity(currentObject, header, footer, forthcomingObjectList) {
+function bind__stockAdjustmentHasBeenDone_quantity(currentObject) {
   if (currentObject.senmvt === '-') {
-    return currentObject.senmvt + currentObject.uvcmvt;
+    return Number(currentObject.senmvt + currentObject.uvcmvt);
   }
   return currentObject.uvcmvt;
 };
 
-function bind__businessUnitIdentifier(currentObject, header, footer, forthcomingObjectList) {
+function bind__businessUnitIdentifier(currentObject, header) {
   return header.edisit;
 };
 
