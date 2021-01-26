@@ -53,34 +53,28 @@ function bind__expectedPackages(currentObject) {
 function getPackagesBindingMap() {
   return {
     bindings: [
-      { destination: 'quantity', type: 'function', value: bind__packages_quantity },
-      { destination: 'type',     type: 'fixed', value: 'parcel' },
+      { destination: 'quantity', source: 'quantity', type: 'copy'},
+      { destination: 'type', type: 'fixed', value: 'parcel' },
     ]
   }
 };
 
-function bind__packages(currentObject, header, footer, forthcomingObjectList) {
-  const packagesArray = [];
-  for (let i = 0; i < forthcomingObjectList.length; i++) {
-    if (forthcomingObjectList[i].codexc === 41 && forthcomingObjectList[i].scoexc === 20) {
-      packagesArray.push({...forthcomingObjectList[i]});
-    } else if (forthcomingObjectList[i].codexc === 41 && forthcomingObjectList[i].scoexc === 00) {
-      break;
+function bind__packages(currentObject) {
+  let quantity = 0;
+  currentObject.children4120.forEach(child4120 => {
+    const firstChild = child4120.children4130[0];
+    if (firstChild.pcbpro !== 0) {
+      if (firstChild.spcpro !== 0) {
+        quantity += Math.ceil((child4120.uvcrec + child4120.uvcimm) / firstChild.pcbpro / firstChild.spcpro);
+        return;
+      }
+      quantity += Math.ceil((child4120.uvcrec + child4120.uvcimm) / firstChild.pcbpro);
+      return;
     }
-  }
+    quantity += child4120.uvcrec + child4120.uvcimm;
+  });
 
-  return new Converter().convert(packagesArray, [getPackagesBindingMap()]);
-};
-
-function bind__packages_quantity(currentObject) { 
-  const firstChild = currentObject.children4130[0];
-  if (firstChild.pcbpro !== 0) {
-    if (firstChild.spcpro !== 0) {
-      return (currentObject.uvcrec + currentObject.uvcimm) / firstChild.pcbpro / firstChild.spcpro;
-    }
-    return (currentObject.uvcrec + currentObject.uvcimm) / firstChild.pcbpro;
-  }
-  return currentObject.uvcrec + currentObject.uvcimm;
+  return new Converter().convert([{ quantity }], [getPackagesBindingMap()]);
 };
 
 function bind__businessUnitIdentifier(currentObject, header) {
@@ -105,17 +99,8 @@ function getReceptionLinesMap() {
   };
 };
 
-function bind__receptionLines(currentObject, header, footer, forthcomingObjectList) {
-  const receptionLinesArray = [];
-  for (let i = 0; i < forthcomingObjectList.length; i++) {
-    if (forthcomingObjectList[i].codexc === 41 && forthcomingObjectList[i].scoexc === 20) {
-      receptionLinesArray.push(forthcomingObjectList[i]);
-    } else if (forthcomingObjectList[i].codexc === 41 && forthcomingObjectList[i].scoexc === 00) {
-      break;
-    }
-  }
-
-  return new Converter().convert(receptionLinesArray, [getReceptionLinesMap()]);
+function bind__receptionLines(currentObject) {
+  return new Converter().convert(currentObject.children4120, [getReceptionLinesMap()]);
 };
 
 function bind__receptionLines_physicalStockExpirationDate(currentObject) {
