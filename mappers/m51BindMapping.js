@@ -7,33 +7,41 @@ function getBindingMap() {
         ['regexc', [ '51.01', '51.05', '51.30', '51.31', '51.20', '51.27', '51.80', '51.99' ],],
       ]),
       bindings: [
+          { destination: 'key.identifier', source: 'numtou',                  type: 'copy' },
+          { destination: 'key.supplyCircuitType', type: 'function', value: bind__supplyCircuitType },
+          { destination: 'key.shippingLocation.businessUnitIdentifier',  type: 'function', value: bind__businessUnitIdentifier },
+          { destination: 'key.shippingLocation.identifier', source: 'codact', type: 'function', value: bind__codact_integer },
+          { destination: 'key.shippingLocation.type', type: 'fixed', value: 'warehouse' },
+          { destination: 'key.deliveryLocation.businessUnitIdentifier', source: 'codrgt', type: 'copy' },
+          { destination: 'key.deliveryLocation.identifier', type: 'function', value: bind__deliveryLocation_identifier },
+          { destination: 'key.deliveryLocation.type', type: 'function', value: bind__deliveryLocation_type },
           { destination: 'identifier', source: 'numtou',                  type: 'copy' },
-          { destination: 'shippingDate', source: 'datexp',                  type: 'copy' },
-          { destination: 'expectedDeliveryDate', source: 'datliv',                  type: 'copy' },
+          { destination: 'shippingDate', source: 'datexp', type: 'function', value: bind__datexp_epoch },
+          { destination: 'expectedDeliveryDate', source: 'datliv', type: 'function', value: bind__datliv_epoch },
           { destination: 'supplyCircuitType', type: 'function', value: bind__supplyCircuitType },
           { destination: 'deliveryNoteIdentifier', source: 'numtou', type: 'copy' },
           { destination: 'deliveryNoteDate', type: 'fixed', value: null },
           { destination: 'packages', type: 'function', value: bind__packages },
           { destination: 'returnableContainers', type: 'fixed', value: [] },
-          { destination: 'conditioning.grossWeight', type: 'function', value: bind__conditioning_grossWeight },
-          { destination: 'conditioning.grossWeightUnitOfMeasure', type: 'fixed', value: 'kg' },
-          { destination: 'conditioning.grossVolume', type: 'function', value: bind__conditioning_grossVolume },
-          { destination: 'conditioning.grossVolumeUnitOfMeasure', type: 'fixed', value: 'm3' },
-          { destination: 'conditioning.footage', type: 'fixed', value: null },
+          { destination: 'conditioning.totalGrossWeight', type: 'function', value: bind__conditioning_totalGrossWeight },
+          { destination: 'conditioning.totalGrossWeightUnitOfMeasure', type: 'fixed', value: 'kg' },
+          { destination: 'conditioning.totalGrossVolume', type: 'function', value: bind__conditioning_totalGrossVolume },
+          { destination: 'conditioning.totalGrossVolumeUnitOfMeasure', type: 'fixed', value: 'm3' },
+          { destination: 'conditioning.totalFootage', type: 'fixed', value: null },
           { destination: 'conditioning.palletEquivalent', type: 'fixed', value: null },
           { destination: 'transport.carrierName', type: 'fixed', value: null },
           { destination: 'transport.carrierSCAC', type: 'fixed', value: null },
-          { destination: 'equipment.identifier', source: 'codtra', type: 'copy' },
-          { destination: 'equipment.licensePlate', type: 'function', value: bind__equipment_licensePlate },
-          { destination: 'equipment.sealNumber', source: 'numplb', type: 'copy' },
+          { destination: 'transport.equipment.identifier', source: 'codtra', type: 'copy' },
+          { destination: 'transport.equipment.licensePlate', type: 'function', value: bind__equipment_licensePlate },
+          { destination: 'transport.equipment.sealNumber', source: 'numplb', type: 'copy' },
           { destination: 'shippingLocation.businessUnitIdentifier',  type: 'function', value: bind__businessUnitIdentifier },
-          { destination: 'shippingLocation.identifier', source: 'codact', type: 'copy' },
+          { destination: 'shippingLocation.identifier', source: 'codact', type: 'function', value: bind__codact_integer },
           { destination: 'shippingLocation.type', type: 'fixed', value: 'warehouse' },
           { destination: 'invoicingLocation.businessUnitIdentifier', type: 'function', value: bind__5101_businessUnitIdentifier },
-          { destination: 'invoicingLocation.identifier', source: 'codcli', type: 'copy' },
+          { destination: 'invoicingLocation.identifier', source: 'codcli', type: 'function', value: bind__codcli_integer  },
           { destination: 'invoicingLocation.type', type: 'fixed', value: 'store' },
           { destination: 'orderingLocation.businessUnitIdentifier', type: 'function', value: bind__5101_businessUnitIdentifier },
-          { destination: 'orderingLocation.identifier', source: 'codcli', type: 'copy' },
+          { destination: 'orderingLocation.identifier', source: 'codcli', type: 'function', value: bind__codcli_integer },
           { destination: 'orderingLocation.type', type: 'fixed', value: 'store' },
           { destination: 'deliveryLocation.businessUnitIdentifier', source: 'codrgt', type: 'copy' },
           { destination: 'deliveryLocation.identifier', type: 'function', value: bind__deliveryLocation_identifier },
@@ -43,13 +51,26 @@ function getBindingMap() {
   }
 };
 
-function test(currentObject) {
-  return currentObject.cliliv;
-}
+function bind__datexp_epoch(currentObject) {
+  return currentObject.datexp.getTime();
+};
+
+function bind__datliv_epoch(currentObject) {
+  return currentObject.datliv.getTime();
+};
 
 function bind__supplyCircuitType(currentObject) {
-  return __findValrubForCodrubValue(currentObject.children5105, 'CIRL');
+  const foundValue = __findValrubForCodrubValue(currentObject.children5105, 'CIRL');
+  return foundValue ? foundValue : 'stock';
 }
+
+function bind__codact_integer(currentObject) {
+  return parseInt(currentObject.codact);
+};
+
+function bind__codcli_integer(currentObject) {
+  return parseInt(currentObject.codcli.substring(1));
+};
 
 function getPackagesBindingMap() {
   return {
@@ -75,13 +96,13 @@ function bind__packages_type(currentObject) {
   return currentObject.codemb === 'P' ? 'pallet' : 'parcel';
 }
 
-function bind__conditioning_grossWeight(currentObject) {
+function bind__conditioning_totalGrossWeight(currentObject) {
   let grossWeight = 0;
   currentObject.children5130.forEach(child5130 => child5130.children5131.forEach(child5131 => grossWeight += child5131.pdbliv));
   return grossWeight / 1000;
 }
 
-function bind__conditioning_grossVolume(currentObject) {
+function bind__conditioning_totalGrossVolume(currentObject) {
   let grossVolume = 0;
   currentObject.children5130.forEach(child5130 => child5130.children5131.forEach(child5131 => grossVolume += child5131.volcol));
   return grossVolume / 1000;
@@ -94,14 +115,14 @@ function bind__equipment_licensePlate(currentObject) {
 }
 
 function bind__businessUnitIdentifier(currentObject, header) {
-  return header.edisit;
+  return parseInt(header.edisit);
 }
 
 function bind__5101_businessUnitIdentifier(currentObject) {
   return currentObject.children5101[0].dipliv;
 }
 function bind__deliveryLocation_identifier(currentObject) {
-  return currentObject.cliliv.substr(-3);
+  return parseInt(currentObject.cliliv.substr(-3));
 }
 
 function bind__deliveryLocation_type(currentObject) {
@@ -138,10 +159,8 @@ function getShipmentLoadingUnitsByCODPALBindingMap() {
       { destination: 'sscc', source: 'codpal', type: 'copy'},
       { destination: 'packageType', type: 'function', value: bind__shipmentLoadingUnits_packageType},
       { destination: 'palletEquivalent', type: 'fixed', value: null },
-      { destination: 'containerBillingClass', type: 'fixed', value: null },
       { destination: 'containerCondition', type: 'fixed', value: null },
-      { destination: 'containerStatusControl', type: 'fixed', value: null },
-      { destination: 'conditioning.grossWeight', type: 'fixed', value: null },
+      { destination: 'conditioning.grossWeight', type: 'function', value: bind__shipmentLoadingUnits_conditioning_grossWeight },
       { destination: 'conditioning.grossWeightUnitOfMeasure', type: 'fixed', value: 'kg' },
       { destination: 'conditioning.grossVolume', type: 'fixed', value: null },
       { destination: 'conditioning.grossVolumeUnitOfMeasure', type: 'fixed', value: null },
@@ -151,7 +170,7 @@ function getShipmentLoadingUnitsByCODPALBindingMap() {
       { destination: 'conditioning.heightUnitOfMeasure', type: 'fixed', value: null },
       { destination: 'conditioning.length', type: 'fixed', value: null },
       { destination: 'conditioning.lengthUnitOfMeasure', type: 'fixed', value: null },
-      { destination: 'shipmentLoadingUnits', type: 'function', value: bind__shipmentLoadingUnits_2nd },
+      { destination: 'shipmentLoadingUnitLines', type: 'function', value: bind__shipmentLoadingUnits_2nd },
     ]
   }
 };
@@ -192,6 +211,10 @@ function bind__shipmentLoadingUnits_CODPAL(currentObject) {
   return new Converter().convert(uniqueCODPAL, [getShipmentLoadingUnitsByCODPALBindingMap()]);
 };
 
+function bind__shipmentLoadingUnits_conditioning_grossWeight(currentObject) {
+  return currentObject.children5131[0].pdbliv / 1000;
+}
+
 function bind__shipmentLoadingUnits_grossWeight(currentObject) {
   let grossVolume = 0;
   currentObject.children5130.forEach(child5130 => child5130.children5131.forEach(child5131 => grossVolume += child5131.pdbliv));
@@ -216,12 +239,15 @@ function getShipmentLoadingUnits2ndBindingMap() {
       { destination: 'deliveryNoteDate', type: 'fixed', value: null },
       { destination: 'deliveryNoteIdentifier', type: 'fixed', value: null },
       { destination: 'customerOrderNumber', type: 'function', value: bind__shipmentLoadingUnits_customerOrderNumber },
-      { destination: 'customerOrderLineNumber', type: 'fixed', value: null },
+      { destination: 'customerOrderLineNumber', type: 'function', value: bind__shipmentLoadingUnits_customerOrderLineNumber },
       // TODO: update with final M51
       // { destination: 'todo', type: 'function', value: bind__shipmentLoadingUnits_todo },
       { destination: 'transferIdentifier', type: 'function', value: bind__shipmentLoadingUnits_transferIdentifier },
+      { destination: 'transferLineIdentifier', type: 'function', value: bind__shipmentLoadingUnits_transferLineIdentifier },
       { destination: 'purchaseOrderIdentifier', type: 'fixed', value: null },
+      { destination: 'purchaseOrderLineIdentifier', type: 'fixed', value: null },
       { destination: 'returnSupplierIdentifier', type: 'fixed', value: null },
+      { destination: 'returnSupplierLineIdentifier', type: 'fixed', value: null },
     ]
   }
 };
@@ -238,12 +264,20 @@ function bind__shipmentLoadingUnits_customerOrderNumber(currentObject) {
   return __findValrubForCodrubValue(currentObject.children5127, 'CDCL');
 }
 
+function bind__shipmentLoadingUnits_customerOrderLineNumber(currentObject) {
+  return __findValrubForCodrubValue(currentObject.children5127, 'LGCL');
+}
+
 function bind__shipmentLoadingUnits_todo(currentObject) {
   return __findValrubForCodrubValue(currentObject.children5127, 'CDTI');
 }
 
 function bind__shipmentLoadingUnits_transferIdentifier(currentObject) {
   return currentObject.parent.parent.refliv;
+}
+
+function bind__shipmentLoadingUnits_transferLineIdentifier(currentObject) {
+  return `${parseInt(currentObject.nliliv)}`;
 }
 
 function __findValrubForCodrubValue(arrayToSearch, valueToFind) {
