@@ -49,7 +49,7 @@ class Converter {
         }
 
         for (; i < dataObjectsLength; i++) {
-            let sourceObject = dataObjects[i];
+            let sourceObject = dataObjects[parseInt(i)];
             let destinationObject = {};
 
             let bindingMap = this.getProperBindMap(bindingMapArray,sourceObject);
@@ -58,7 +58,7 @@ class Converter {
             if (skipObjectIfMap && this.skipCurrentLine(skipObjectIfMap, sourceObject)) continue;
 
             for (let j = 0; j < bindingMap.bindings.length; j++) {
-                let bind = bindingMap.bindings[j];
+                let bind = bindingMap.bindings[parseInt(j)];
 
                 switch (bind.type) {
                     case 'copy':
