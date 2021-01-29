@@ -7,7 +7,7 @@ function getNotificationBindingMap() {
     ]),
     bindings: [
             { destination: 'snapshotDate',                                              type: 'function', value: bind__date_epoch },
-            { destination: 'fileNamePath',                                      type: 'fixed', value: null },
+            { destination: 'fileNamePath',                                              type: 'fixed', value: null },
             { destination: 'sourcingLocation.businessUnitIdentifier', source: 'edisit', type: 'header' },
             { destination: 'sourcingLocation.identifier', source: 'codact',             type: 'copy' },
             { destination: 'sourcingLocation.type',                                     type: 'fixed', value: 'warehouse' },

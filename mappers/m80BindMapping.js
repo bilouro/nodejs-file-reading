@@ -13,7 +13,7 @@ function getBindingMap8010() {
               { destination: 'collaboratorIdentifier',                            type: 'fixed', value: null },
               { destination: 'productReferenceAdeo',                              type: 'fixed', value: null },
               { destination: 'productReferenceBU', source: 'codpro',              type: 'copy' },
-              { destination: 'receptionIdentifier',                               type: 'fixed', value: null },
+              { destination: 'goodsReceivingIdentifier',                          type: 'fixed', value: null },
               { destination: 'adjustmentDate',                                    type: 'function', value: bind__date_epoch },
               { destination: 'quantity',                                          type: 'function', value: bind__stockAdjustmentHasBeenDone_quantity },
               { destination: 'reason', source: 'motmvt',                          type: 'copy' },

@@ -46,7 +46,7 @@ function getBindingMap() {
           { destination: 'deliveryLocation.businessUnitIdentifier', source: 'codrgt', type: 'copy' },
           { destination: 'deliveryLocation.identifier', type: 'function', value: bind__deliveryLocation_identifier },
           { destination: 'deliveryLocation.type', type: 'function', value: bind__deliveryLocation_type },
-          { destination: 'shipmentLoadingUnits', type: 'function', value: bind__shipmentLoadingUnits },
+          { destination: 'shipmentLoadingShipUnits', type: 'function', value: bind__shipmentLoadingUnits },
         ]
   }
 };
@@ -147,7 +147,8 @@ function getShipmentLoadingUnitsWithSSCHETBindingMap() {
       { destination: 'conditioning.heightUnitOfMeasure', type: 'fixed', value: null },
       { destination: 'conditioning.length', type: 'fixed', value: null },
       { destination: 'conditioning.lengthUnitOfMeasure', type: 'fixed', value: null },
-      { destination: 'shipmentLoadingUnits', type: 'function', value: bind__shipmentLoadingUnits_CODPAL },
+      { destination: 'shipmentLoadingShipUnits', type: 'function', value: bind__shipmentLoadingUnits_CODPAL },
+      { destination: 'shipmentLoadingShipUnitLines', type: 'fixed', value: [] },
     ]
   }
 };
@@ -170,7 +171,8 @@ function getShipmentLoadingUnitsByCODPALBindingMap() {
       { destination: 'conditioning.heightUnitOfMeasure', type: 'fixed', value: null },
       { destination: 'conditioning.length', type: 'fixed', value: null },
       { destination: 'conditioning.lengthUnitOfMeasure', type: 'fixed', value: null },
-      { destination: 'shipmentLoadingUnitLines', type: 'function', value: bind__shipmentLoadingUnits_2nd },
+      { destination: 'shipmentLoadingShipUnits', type: 'fixed', value: [] },
+      { destination: 'shipmentLoadingShipUnitLines', type: 'function', value: bind__shipmentLoadingUnits_2nd },
     ]
   }
 };
