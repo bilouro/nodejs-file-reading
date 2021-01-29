@@ -10,15 +10,15 @@ class Converter {
 
         } else { // (bindMapArray.length > 1) {
             for (let i = 0; i < bindMapArray.length; i++) {
-                const bindMap = bindMapArray[i];
+                const bindMap = bindMapArray[parseInt(i)];
                 let processObjectOnlyIfMap = bindMap.processObjectOnlyIf;
     
-                if (!processObjectOnlyIfMap) throw `Atribute processObjectOnlyIf is required when more than one bind is given`;
+                if (!processObjectOnlyIfMap) throw `Attribute processObjectOnlyIf is required when more than one bind is given`;
 
                 let isProper = true;
                 for (let [attribute, valuesList] of processObjectOnlyIfMap) {
-                    if (!object[attribute]) throw `Attribute "${attribute}" defined in mapping.processObjectOnlyIf does not exist in source object`;
-                    if (!valuesList.includes(object[attribute])) {
+                    if (!object[String(attribute)]) throw `Attribute "${attribute}" defined in mapping.processObjectOnlyIf does not exist in source object`;
+                    if (!valuesList.includes(object[String(attribute)])) {
                         isProper = false;
                         break;
                     }
@@ -90,8 +90,8 @@ class Converter {
 
     skipCurrentLine(skipObjectIfMap, object) {
         for (let [attribute, skipValuesList] of skipObjectIfMap) {
-            if (!object[attribute]) throw `Attribute "${attribute}" defined in mapping.skipObjectIf does not exist in source object`;
-            if (skipValuesList.includes(object[attribute])) return true;
+            if (!object[String(attribute)]) throw `Attribute "${attribute}" defined in mapping.skipObjectIf does not exist in source object`;
+            if (skipValuesList.includes(object[String(attribute)])) return true;
         }
         return false;
     }

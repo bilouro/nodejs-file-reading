@@ -15,7 +15,7 @@ function getObjectsFromFile(data, fileMapping) {
         let line = lines[lineNumber];
         if (!isLineHasData(line)) continue; //ignoring empty lines
         
-        let discriminator = line.substr(fileMapping.discriminatorInitialPosition, fileMapping.discriminatorInitialPostion+fileMapping.discriminatorLenght);
+        let discriminator = line.substr(fileMapping.discriminatorInitialPosition, fileMapping.discriminatorInitialPosition+fileMapping.discriminatorLength);
         checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber);
 
         let lineMapping = fileMapping.lines.get(discriminator);
@@ -119,7 +119,7 @@ function isLineMappingValid(lineMapping, discriminator, lineNumber) {
 
 function checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber) {
     if (!discriminator)
-        throw `could not get discriminator at position ${fileMapping.discriminatorInitialPostion}(${fileMapping.discriminatorLenght}). line number ${lineNumber}.`;
+        throw `could not get discriminator at position ${fileMapping.discriminatorInitialPosition}(${fileMapping.discriminatorLength}). line number ${lineNumber}.`;
 }
 
 function checkRequiredIsValid(attribute, value, lineNumber) {
