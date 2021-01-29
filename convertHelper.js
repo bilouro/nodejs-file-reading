@@ -40,7 +40,7 @@ class Converter {
         //start 1(one) object after the header object
         let i = (opts && opts.header != undefined && opts.header != null) ? opts.header + 1 : 0;
         //dont process footer object (stop one object before)  //footer has negative value
-        let dataObjectsLenght = (opts && opts.footer != undefined && opts.footer != null) ? dataObjects.length + opts.footer : dataObjects.length;
+        let dataObjectsLength = (opts && opts.footer != undefined && opts.footer != null) ? dataObjects.length + opts.footer : dataObjects.length;
 
         if (Array.isArray(bindingMapArray)) {
             if (bindingMapArray.length == 0) throw `BindingMapArray is required`;
@@ -48,7 +48,7 @@ class Converter {
             throw `BindingMapArray is required or invalid. it must be an array`;
         }
 
-        for (; i < dataObjectsLenght; i++) {
+        for (; i < dataObjectsLength; i++) {
             let sourceObject = dataObjects[i];
             let destinationObject = {};
 
@@ -76,7 +76,7 @@ class Converter {
                     case 'function':
                         setNestedAttribute(destinationObject, 
                             bind.destination, 
-                            bind.value(sourceObject, header, footer, dataObjects.slice(i+1, dataObjectsLenght))
+                            bind.value(sourceObject, header, footer, dataObjects.slice(i+1, dataObjectsLength))
                             );
                         break;
                     default:

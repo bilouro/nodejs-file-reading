@@ -4,8 +4,8 @@
  */
 function getFileMapping() {
   return {
-    discriminatorInitialPostion: 0,
-    discriminatorLenght: 2,
+    discriminatorInitialPosition: 0,
+    discriminatorLength: 2,
     lines: new Map([
       [
         '00',

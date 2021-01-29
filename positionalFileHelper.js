@@ -15,7 +15,7 @@ function getObjectsFromFile(data, fileMapping) {
         let line = lines[lineNumber];
         if (!isLineHasData(line)) continue; //ignoring empty lines
         
-        let discriminator = line.substr(fileMapping.discriminatorInitialPostion, fileMapping.discriminatorInitialPostion+fileMapping.discriminatorLenght);
+        let discriminator = line.substr(fileMapping.discriminatorInitialPosition, fileMapping.discriminatorInitialPostion+fileMapping.discriminatorLenght);
         checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber);
 
         let lineMapping = fileMapping.lines.get(discriminator);
