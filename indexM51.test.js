@@ -59,10 +59,10 @@ test("getObjectsFromFile :: Test of M51 ", () => {
           expect( result[1].typliv ).toEqual("1");
           expect( result[1].numvag ).toEqual(21010012);
           expect( result[1].datprp ).toEqual(new Date(2021, 0, 5, 0, 0, 0));
-          expect( result[1].codrgt ).toEqual("003");
+          expect( result[1].codrgt ).toEqual(3);
           expect( result[1].touliv ).toEqual(0);
           expect( result[1].ordliv ).toEqual(0);
-          expect( result[1].numtou ).toEqual(78010);
+          expect( result[1].numtou ).toEqual("00078010");
           expect( result[1].datexp ).toEqual(new Date(2021, 0, 7, 9, 23, 0));
           expect( result[1].heuexp ).toEqual("092332");
           expect( result[1].codtra ).toEqual("100");
@@ -223,7 +223,7 @@ test("getObjectsFromFile :: Test of M51 ", () => {
           expect( result[7].codact ).toEqual("358");
           expect( result[7].codcli ).toEqual("O009");
           expect( result[7].refliv ).toEqual("38112031");
-          expect( result[7].nliliv ).toEqual(1);
+          expect( result[7].nliliv ).toEqual("00001");
           expect( result[7].codpro ).toEqual("00436271");
           expect( result[7].valpro ).toEqual(0);
           expect( result[7].edipro ).toEqual("3276006138031");
