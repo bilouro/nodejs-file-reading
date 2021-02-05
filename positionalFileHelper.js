@@ -14,9 +14,8 @@ function getObjectsFromFile(data, fileMapping) {
     for(let lineNumber=0;lineNumber<lines.length;lineNumber++){
         let line = lines[lineNumber];
         if (!isLineHasData(line)) continue; //ignoring empty lines
-        
-        let discriminator = line.substr(fileMapping.discriminatorInitialPosition, fileMapping.discriminatorInitialPosition+fileMapping.discriminatorLength);
-        checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber);
+
+        let discriminator = getDiscriminator(line, fileMapping, lineNumber);
 
         let lineMapping = fileMapping.lines.get(discriminator);
         if (!isLineMappingValid(lineMapping, discriminator, lineNumber)) continue;
@@ -40,6 +39,7 @@ function getObjectFromLine(lineMapping, line, lineNumber, parentMap) {
         checkMappingIsValid(attribute);
 
         const value = line.substring(attribute.initialPosition, attribute.initialPosition + attribute.length);
+        let parentObject = {};
         switch (attribute.type) {
             case 'integer':
                 dataObject[attribute.name] = parseInteger(value, attribute, lineNumber);
@@ -52,13 +52,14 @@ function getObjectFromLine(lineMapping, line, lineNumber, parentMap) {
                 break;
             case 'parent':
                 if (attribute.name == 'parent') throw "Attribute Parent, declared in lineMapping. Could not be named 'parent', due to, its reserved to de parent object";
-                dataObject[attribute.name] = parentMap.get(attribute.parentDiscriminator)[attribute.parentAttribute];
+                parentObject = parentMap.get(attribute.parentDiscriminator);
+                dataObject[attribute.name] = parentObject[attribute.parentAttribute];
                 
                 //adding children to parent
-                pushNestedAttribute(parentMap.get(attribute.parentDiscriminator), attribute.childName, dataObject);
+                pushNestedAttribute(parentObject, attribute.childName, dataObject);
                 
                 //adding parent attribute to the children.
-                dataObject['parent'] = parentMap.get(attribute.parentDiscriminator);
+                dataObject['parent'] = parentObject;
                 break;
             default:
                 throw `Attribute type "${attribute.type}", declared in lineMapping is not valid or not implemented. line number ${lineNumber}.`;
@@ -105,8 +106,8 @@ function isLineHasData(line) {
 }
 
 function checkFileIsValid(lines) {
-    if (!lines || (lines.length == 1 && lines[0] == ''))
-        throw `file has no lines`;
+    if (!lines || (lines.length === 1 && lines[0] === ''))
+        throw Error('file has no lines');
 }
 
 function isLineMappingValid(lineMapping, discriminator, lineNumber) {
@@ -117,9 +118,10 @@ function isLineMappingValid(lineMapping, discriminator, lineNumber) {
     return true;
 }
 
-function checkDiscriminatorIsValid(discriminator, fileMapping, lineNumber) {
-    if (!discriminator)
-        throw `could not get discriminator at position ${fileMapping.discriminatorInitialPosition}(${fileMapping.discriminatorLength}). line number ${lineNumber}.`;
+function getDiscriminator (line, fileMapping, lineNumber) {
+  const discriminator = line.substr(fileMapping.discriminatorInitialPosition, fileMapping.discriminatorInitialPosition + fileMapping.discriminatorLength)
+  if (!discriminator) { throw new Error(`could not get discriminator at position ${fileMapping.discriminatorInitialPosition}(${fileMapping.discriminatorLength}). line number ${lineNumber}.`) }
+  return discriminator;
 }
 
 function checkRequiredIsValid(attribute, value, lineNumber) {
@@ -139,6 +141,12 @@ function checkMappingIsValid(attribute) {
 }
 
 module.exports = {
+    checkFileIsValid,
+    getDiscriminator,
+    isLineMappingValid,
+    checkMappingIsValid,
+    checkRequiredIsValid,
+    getObjectFromLine,
     getObjectsFromFile: getObjectsFromFile,
     isLineHasData: isLineHasData,
     parseString: parseString,
