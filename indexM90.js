@@ -13,7 +13,7 @@ fs.readFile('./files/358M9020122900148760.txt', 'utf8', (err, data) => {
     const notificationEventObjects = new Converter().convert(dataObjects, [getNotificationBindingMap()], { header: 0, footer: -1});
     const eventObjects = new Converter().convert(dataObjects, [getBindingMap()], { header: 0, footer: -1});
 
-    const timestamp = moment().format('YYYYMMDDhhmmssSSSSS');
+    const timestamp = moment().format('YYYYMMDDHHmmssSSSSS');
     const fileName = `./files/m90-output-${timestamp}.txt`;
 
     const notificationEvent = notificationEventObjects[0]

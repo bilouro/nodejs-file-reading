@@ -39,14 +39,9 @@ function bind__date_epoch(currentObject, header) {
   return header.datexc.getTime();
 };
 
-function bind__physicalStockQuantity(currentObject, header, footer, forthcomingObjectList) {
-  let sum = 0; 
-  for (i = 0; i < forthcomingObjectList.length; i++) {
-    if (forthcomingObjectList[i].codexc === 90 && forthcomingObjectList[i].scoexc === 60) {
-      if (forthcomingObjectList[i].motimm === null) sum += forthcomingObjectList[i].nbruvc01;
-    } else break;
-  }
-  return sum;
+function bind__physicalStockQuantity(currentObject) {
+  return currentObject.children9060.reduce((acc, child9060) => { return acc + child9060.nbruvc01}, 0)
+
 };
 
 function bind__blockedStockQuantity(currentObject, header, footer, forthcomingObjectList) {
@@ -62,10 +57,10 @@ function bind__blockedStockQuantity(currentObject, header, footer, forthcomingOb
 function getPhysicalStocksBindingMap() {
   return {
     bindings: [
-      { destination: 'quantity', source: 'nbruvc01', type: 'copy' },
+      { destination: 'quantity', source: 'quantity', type: 'copy' },
       { destination: 'expirationDate',               type: 'function', value: bind__physicalStock_expirationDate  },
       { destination: 'qualification',                type: 'fixed', value: null },
-      { destination: 'status',                       type: 'fixed', value: null },
+      { destination: 'status', source: 'status',     type: 'copy' },
     ]
   }
 };
@@ -74,13 +69,34 @@ function bind__physicalStock_expirationDate(currentObject) {
   return currentObject.datfvi ? currentObject.datfvi.getTime() : null
 };
 
-function bind__physicalStocksArray(currentObject, header, footer, forthcomingObjectList) {
+function bind__physicalStocksArray(currentObject) {
   const physicalStocksArray = [];
-  for (let i = 0; i < forthcomingObjectList.length; i++) {
-    if (forthcomingObjectList[i].codexc === 90 && forthcomingObjectList[i].scoexc === 60) {
-      if (forthcomingObjectList[i].motimm === null) physicalStocksArray.push(forthcomingObjectList[i]);
-    } else break;
-  }
+
+  currentObject.children9060.forEach(child9060 => {
+    if (child9060.motimm === null) {
+      let quantity = 0
+      if (child9060.nbruvc01 !== 0) {
+        quantity = child9060.nbruvc01 - child9060.nbruvc02 - child9060.nbruvc09
+        physicalStocksArray.push({...child9060, quantity, status: 'physical stock available'})
+      }
+      if (child9060.nbruvc02 !== 0) {
+        quantity = child9060.nbruvc02
+        physicalStocksArray.push({...child9060, quantity, status: 'reserved'})
+      }
+      if (child9060.nbruvc03 !== 0) {
+        quantity = child9060.nbruvc03
+        physicalStocksArray.push({...child9060, quantity, status: 'in preparation'})
+      }
+      if (child9060.nbruvc04 !== 0) {
+        quantity = child9060.nbruvc04
+        physicalStocksArray.push({...child9060, quantity, status: 'prepared'})
+      }
+      if (child9060.nbruvc09 !== 0) {
+        quantity = child9060.nbruvc09
+        physicalStocksArray.push({...child9060, quantity, status: 'reception in progress'})
+      }
+    }
+  });
 
   return new Converter().convert(physicalStocksArray, [getPhysicalStocksBindingMap()])
 };
@@ -116,13 +132,12 @@ function bind__blockedStock_date_epoch(currentObject) {
   return currentObject.datimm1.getTime();
 }
 
-function bind__blockedStocksArray(currentObject, header, footer, forthcomingObjectList) {
+function bind__blockedStocksArray(currentObject) {
   const blockedStocksArray = [];
-  for (let i = 0; i < forthcomingObjectList.length; i++) {
-    if (forthcomingObjectList[i].codexc === 90 && forthcomingObjectList[i].scoexc === 60) {
-      if (forthcomingObjectList[i].motimm !== null) blockedStocksArray.push(forthcomingObjectList[i]);
-    } else break;
-  }
+
+  currentObject.children9060.forEach(child9060 => {
+    if (child9060.motimm !== null) blockedStocksArray.push(child9060);
+  })
 
   return new Converter().convert(blockedStocksArray, [getBlockedStocksBindingMap()])
 };
