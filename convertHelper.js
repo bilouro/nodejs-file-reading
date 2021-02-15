@@ -89,8 +89,8 @@ class Converter {
     }
 
     skipCurrentLine(skipObjectIfMap, object) {
-        for (let [attribute, skipValuesList] of skipObjectIfMap) {
-            if (!object[String(attribute)]) throw `Attribute "${attribute}" defined in mapping.skipObjectIf does not exist in source object`;
+      for (let [attribute, skipValuesList] of skipObjectIfMap) {
+            if (!object[String(attribute)]) throw new Error(`Attribute "${attribute}" defined in mapping.skipObjectIf does not exist in source object`);
             if (skipValuesList.includes(object[String(attribute)])) return true;
         }
         return false;

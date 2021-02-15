@@ -1,8 +1,8 @@
 
 function genericSetNestedAttribute(object, path, value, _function) {
     let tempObject;
-    if (!path) throw 'Argument path not informed';
-    if (!object) throw 'Argument object not informed';
+    if (!path) throw new Error('Argument path not informed');
+    if (!object) throw new Error('Argument object not informed');
 
     let splittedPath = path.split('.');
     if (splittedPath.length == 1) {
@@ -38,4 +38,7 @@ function pushValue(object, attribute, value) {
 module.exports = {
     setNestedAttribute: setNestedAttribute,
     pushNestedAttribute: pushNestedAttribute,
+    pushValue,
+    setValue,
+    genericSetNestedAttribute
 };
