@@ -106,9 +106,6 @@ describe('getObjectsFromFile()', () => {
   test('getObjectsFromFile(): OK - Get object from line', () => {
     expect(pfh.getObjectsFromFile(`00.00${os.EOL}00.01${os.EOL}`, {discriminatorInitialPosition: 0, discriminatorLength: 5, lines: new Map([[ '00.00', [{ name: 'regexc', initialPosition: 0, length: 5, type: 'string', required: true }]]])})[0]).toHaveProperty('regexc', '00.00')
   })
-  // test('getObjectsFromFile(): OK - Get object from line', () => {
-  //   expect(pfh.getObjectsFromFile(`${os.EOL}00.01`, {discriminatorInitialPosition: 0, discriminatorLength: 5, lines: new Map([[ '00.00', [{ name: 'regexc', initialPosition: 0, length: 5, type: 'string', required: true }]]])})[0]).toHaveProperty('regexc', '00.00')
-  // })
 })
 
 //isLineHasData

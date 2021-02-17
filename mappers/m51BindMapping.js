@@ -7,7 +7,7 @@ function getBindingMap() {
         ['regexc', [ '51.01', '51.05', '51.30', '51.31', '51.20', '51.27', '51.80', '51.99' ],],
       ]),
       bindings: [
-          { destination: 'key.identifier', source: 'numtou',                  type: 'copy' },
+          { destination: 'key.identifier',                   type: 'function', value: bindIdentifier  },
           { destination: 'key.supplyCircuitType', type: 'function', value: bind__supplyCircuitType },
           { destination: 'key.shippingLocation.businessUnitIdentifier',  type: 'function', value: bind__businessUnitIdentifier },
           { destination: 'key.shippingLocation.identifier', source: 'codact', type: 'function', value: bind__codact_integer },
@@ -15,11 +15,11 @@ function getBindingMap() {
           { destination: 'key.deliveryLocation.businessUnitIdentifier', source: 'codrgt', type: 'copy' },
           { destination: 'key.deliveryLocation.identifier', type: 'function', value: bind__deliveryLocation_identifier },
           { destination: 'key.deliveryLocation.type', type: 'function', value: bind__deliveryLocation_type },
-          { destination: 'identifier', source: 'numtou',                  type: 'copy' },
+          { destination: 'identifier', source: 'numtou',                  type: 'function', value: bindIdentifier },
           { destination: 'shippingDate', source: 'datexp', type: 'function', value: bind__datexp_epoch },
           { destination: 'expectedDeliveryDate', source: 'datliv', type: 'function', value: bind__datliv_epoch },
           { destination: 'supplyCircuitType', type: 'function', value: bind__supplyCircuitType },
-          { destination: 'deliveryNoteIdentifier', source: 'numtou', type: 'copy' },
+          { destination: 'deliveryNoteIdentifier',  type: 'function', value: bindIdentifier },
           { destination: 'deliveryNoteDate', type: 'fixed', value: null },
           { destination: 'packages', type: 'function', value: bind__packages },
           { destination: 'returnableContainers', type: 'fixed', value: [] },
@@ -50,6 +50,10 @@ function getBindingMap() {
         ]
   }
 };
+
+function bindIdentifier (currentObject) {
+  return String(currentObject.numtou)
+}
 
 function bind__datexp_epoch(currentObject) {
   return currentObject.datexp.getTime();

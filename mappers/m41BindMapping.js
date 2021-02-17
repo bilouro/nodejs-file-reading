@@ -28,7 +28,7 @@ function getBindingMap() {
           { destination: 'shippingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
           { destination: 'shippingLocation.identifier', source: 'codfou', type: 'copy' },
           { destination: 'shippingLocation.type',                         type: 'fixed', value: 'supplier' },
-          { destination: 'receptionLines',                                type: 'function', value: bind__receptionLines },
+          { destination: 'goodsReceivingLines',                                type: 'function', value: bind__receivingLines },
         ]
   }
 };
@@ -99,7 +99,7 @@ function getReceptionLinesMap() {
   };
 };
 
-function bind__receptionLines(currentObject) {
+function bind__receivingLines(currentObject) {
   return new Converter().convert(currentObject.children4120, [getReceptionLinesMap()]);
 };
 

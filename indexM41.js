@@ -4,7 +4,7 @@ const { exit } = require('process');
 const { getObjectsFromFile } = require("./positionalFileHelper");
 const { Converter } = require("./convertHelper");
 const { getFileMapping } = require("./mappers/m41FileMapping");
-const { getBindingMap } = require('./mappers/m41BindMapping');
+const { getBindingMap } = require('./mappers/m41BindMappingFormatted');
 const { DB, dataTransfers, dataTransferLines, dataTransferEvents } = require('./dbConnection');
 
 

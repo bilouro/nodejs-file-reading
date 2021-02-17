@@ -62,7 +62,7 @@ function getFileMapping() {
           { name: 'codrgt', initialPosition: 114, length: 3, type: 'integer', required: false },
           { name: 'touliv', initialPosition: 117, length: 4, type: 'integer', required: false },
           { name: 'ordliv', initialPosition: 121, length: 4, type: 'integer', required: false },
-          { name: 'numtou', initialPosition: 125, length: 8, type: 'string', required: false },
+          { name: 'numtou', initialPosition: 125, length: 8, type: 'integer', required: false },
           { name: 'datexp', initialPosition: 133, length: 12, type: 'date', required: false, dateFormat: 'YYYYMMDDhhmm' },
           { name: 'heuexp', initialPosition: 141, length: 6, type: 'string', required: false },
           { name: 'codtra', initialPosition: 147, length: 14, type: 'string', required: false },
