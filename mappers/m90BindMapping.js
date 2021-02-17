@@ -93,7 +93,7 @@ function bind__physicalStocksArray(currentObject) {
       }
       if (child9060.nbruvc09 !== 0) {
         quantity = child9060.nbruvc09
-        physicalStocksArray.push({...child9060, quantity, status: 'reception in progress'})
+        physicalStocksArray.push({...child9060, quantity, status: 'goods receiving in progress'})
       }
     }
   });

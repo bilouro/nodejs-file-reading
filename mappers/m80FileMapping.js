@@ -51,7 +51,7 @@ function getFileMapping() {
           { name: 'codmvt', initialPosition: 31, length: 2, type: 'string', required: true },
           { name: 'senmvt', initialPosition: 33, length: 1, type: 'string', required: true },
           { name: 'motmvt', initialPosition: 34, length: 3, type: 'string', required: false },
-          { name: 'edimvt', initialPosition: 37, length: 3, type: 'string', required: true },
+          { name: 'edimvt', initialPosition: 37, length: 3, type: 'string', required: false },
           { name: 'refmvt', initialPosition: 40, length: 30, type: 'string', required: true },
           { name: 'uvcmvt', initialPosition: 70, length: 9, type: 'integer', required: true },
           { name: 'codact', initialPosition: 79, length: 3, type: 'integer', required: true },

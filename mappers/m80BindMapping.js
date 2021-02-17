@@ -5,14 +5,15 @@ function getBindingMap8010() {
         ['codmvt', [ '10',],],
       ]),
       bindings: [
-              { destination: 'key.productReferenceBU', source: 'codpro',          type: 'copy' },
+              { destination: 'event', type: 'fixed', value: 'StockAdjustmentHasBeenDone' },
+              { destination: 'key.productReferenceBU', source: 'codpro',          type: 'function', value: bindProductReferenceBU },
               { destination: 'key.sourcingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
               { destination: 'key.sourcingLocation.identifier', source: 'codact', type: 'copy' },
               { destination: 'key.sourcingLocation.type',                         type: 'fixed', value: 'warehouse' },
               { destination: 'identifier', source: 'refmvt',                      type: 'copy' },
               { destination: 'collaboratorIdentifier',                            type: 'fixed', value: null },
               { destination: 'productReferenceAdeo',                              type: 'fixed', value: null },
-              { destination: 'productReferenceBU', source: 'codpro',              type: 'copy' },
+              { destination: 'productReferenceBU', source: 'codpro',              type: 'function', value: bindProductReferenceBU },
               { destination: 'goodsReceivingIdentifier',                          type: 'fixed', value: null },
               { destination: 'adjustmentDate',                                    type: 'function', value: bind__date_epoch },
               { destination: 'quantity',                                          type: 'function', value: bind__stockAdjustmentHasBeenDone_quantity },
@@ -33,14 +34,15 @@ function getBindingMap8080minus() {
         ['senmvt', [ '-',],],
       ]),
       bindings: [
-              { destination: 'key.productReferenceBU', source: 'codpro',          type: 'copy' },
+              { destination: 'event', type: 'fixed', value: 'ProductHasBeenBlocked' },
+              { destination: 'key.productReferenceBU', source: 'codpro',          type: 'function', value: bindProductReferenceBU},
               { destination: 'key.sourcingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
               { destination: 'key.sourcingLocation.identifier', source: 'codact', type: 'copy' },
               { destination: 'key.sourcingLocation.type',                         type: 'fixed', value: 'warehouse' },
               { destination: 'identifier', source: 'refmvt',                      type: 'copy' },
               { destination: 'collaboratorIdentifier',                            type: 'fixed', value: null },
               { destination: 'productReferenceAdeo',                              type: 'fixed', value: null },
-              { destination: 'productReferenceBU', source: 'codpro',              type: 'copy' },
+              { destination: 'productReferenceBU', source: 'codpro',              type: 'function', value: bindProductReferenceBU },
               { destination: 'blockingType',                                      type: 'fixed', value: 'blocked' },
               { destination: 'reason', source: 'edimvt',                          type: 'copy' },
               { destination: 'previousType',                                      type: 'fixed', value: null },
@@ -62,14 +64,15 @@ function getBindingMap8080plus() {
         ['senmvt', [ '+',],],
       ]),
       bindings: [
-              { destination: 'key.productReferenceBU', source: 'codpro',          type: 'copy' },
+              { destination: 'event', type: 'fixed', value: 'ProductHasBeenUnblocked' },
+              { destination: 'key.productReferenceBU', source: 'codpro',          type: 'function', value: bindProductReferenceBU },
               { destination: 'key.sourcingLocation.businessUnitIdentifier',       type: 'function', value: bind__businessUnitIdentifier },
               { destination: 'key.sourcingLocation.identifier', source: 'codact', type: 'copy' },
               { destination: 'key.sourcingLocation.type',                         type: 'fixed', value: 'warehouse' },
               { destination: 'identifier', source: 'refmvt',                      type: 'copy' },
               { destination: 'collaboratorIdentifier',                            type: 'fixed', value: null },
               { destination: 'productReferenceAdeo',                              type: 'fixed', value: null },
-              { destination: 'productReferenceBU', source: 'codpro',              type: 'copy' },
+              { destination: 'productReferenceBU', source: 'codpro',              type: 'function', value: bindProductReferenceBU },
               { destination: 'previousType',                                      type: 'fixed', value: 'blocked' },
               { destination: 'previousReason', source: 'edimvt',                  type: 'copy' },
               { destination: 'movementDate',                                      type: 'function', value: bind__date_epoch },
@@ -80,6 +83,10 @@ function getBindingMap8080plus() {
           ]
       }            
 };
+
+function bindProductReferenceBU(currentObject) {
+  return String(Number(currentObject.codpro))
+}
 
 
 function bind__date_epoch(currentObject) {
