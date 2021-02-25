@@ -1,4 +1,5 @@
 const { getFileMapping: getM80FileMapping } = require("./mappers/m80FileMapping");
+const { getFileMapping: getM51FileMapping } = require("./mappers/m51FileMapping");
 const { getFileMapping: getM90FileMapping } = require("./mappers/m90FileMapping");
 const { getFileMapping: getM41FileMapping } = require("./mappers/m41FileMapping");
 

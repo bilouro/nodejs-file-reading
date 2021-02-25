@@ -97,7 +97,7 @@ function bind__packages(currentObject) {
 };
 
 function bind__packages_type(currentObject) {
-  return currentObject.codemb === 'P' ? 'pallet' : 'parcel';
+  return currentObject.codemb[0] === 'P' ? 'pallet' : 'parcel';
 }
 
 function bind__conditioning_totalGrossWeight(currentObject) {
@@ -162,7 +162,7 @@ function getShipmentLoadingUnitsByCODPALBindingMap() {
     bindings: [
       { destination: 'identifier', source: 'codpal', type: 'copy'},
       { destination: 'sscc', source: 'codpal', type: 'copy'},
-      { destination: 'packageType', type: 'function', value: bind__shipmentLoadingUnits_packageType},
+      { destination: 'packageType', type: 'function', value: bind__packages_type},
       { destination: 'palletEquivalent', type: 'fixed', value: null },
       { destination: 'containerCondition', type: 'fixed', value: null },
       { destination: 'conditioning.grossWeight', type: 'function', value: bind__shipmentLoadingUnits_conditioning_grossWeight },

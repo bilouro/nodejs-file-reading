@@ -44,14 +44,8 @@ function bind__physicalStockQuantity(currentObject) {
 
 };
 
-function bind__blockedStockQuantity(currentObject, header, footer, forthcomingObjectList) {
-  let sum = 0; 
-  for (let i = 0; i < forthcomingObjectList.length; i++) {
-    if (forthcomingObjectList[i].codexc === 90 && forthcomingObjectList[i].scoexc === 60) {
-      if (forthcomingObjectList[i].motimm !== null) sum += forthcomingObjectList[i].nbruvc01;
-    } else break;
-  }
-  return sum;
+function bind__blockedStockQuantity(currentObject) {  
+  return  currentObject.children9060.reduce((acc, child9060) =>  child9060.motimm !== null ? acc + child9060.nbruvc01 : acc, 0)
 };
 
 function getPhysicalStocksBindingMap() {
@@ -133,11 +127,7 @@ function bind__blockedStock_date_epoch(currentObject) {
 }
 
 function bind__blockedStocksArray(currentObject) {
-  const blockedStocksArray = [];
-
-  currentObject.children9060.forEach(child9060 => {
-    if (child9060.motimm !== null) blockedStocksArray.push(child9060);
-  })
+  const blockedStocksArray = currentObject.children9060.filter((child9060) => child9060.motimm !== null)
 
   return new Converter().convert(blockedStocksArray, [getBlockedStocksBindingMap()])
 };
